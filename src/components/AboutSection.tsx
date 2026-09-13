@@ -34,7 +34,7 @@ const AboutSection = () => {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
         >
           {/* Small title */}
-          <p className="text-[8px] font-semibold uppercase tracking-[0.08em] text-violet-600">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-violet-600">
             ABOUT HOSPA
           </p>
 

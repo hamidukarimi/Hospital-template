@@ -4,6 +4,7 @@ import HelpSection from "./components/HelpSection";
 import AboutSection from "./components/AboutSection";
 import ServicesSection from "./components/ServicesSection";
 import TestimonialsSection from "./components/TestimonialsSection";
+import WhyChooseSection from "./components/WhyChooseSection";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <AboutSection />
       <ServicesSection />
       <TestimonialsSection />
+      <WhyChooseSection />
     </>
   );
 }
