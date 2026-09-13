@@ -7,6 +7,7 @@ import TestimonialsSection from "./components/TestimonialsSection";
 import WhyChooseSection from "./components/WhyChooseSection";
 import LabTestsSection from "./components/LabTestsSection";
 import DoctorsSection from "./components/DoctorsSection";
+import ArticlesSection from "./components/ArticlesSection";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <WhyChooseSection />
       <LabTestsSection />
       <DoctorsSection />
+      <ArticlesSection />
     </>
   );
 }
