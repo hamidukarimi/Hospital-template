@@ -8,6 +8,7 @@ import WhyChooseSection from "./components/WhyChooseSection";
 import LabTestsSection from "./components/LabTestsSection";
 import DoctorsSection from "./components/DoctorsSection";
 import ArticlesSection from "./components/ArticlesSection";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <LabTestsSection />
       <DoctorsSection />
       <ArticlesSection />
+      <Footer />
     </>
   );
 }
