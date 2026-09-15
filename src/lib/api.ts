@@ -12,12 +12,13 @@ import type {
   WhyChooseUsItem,
 } from "../types/api";
 
-const DEFAULT_API_URL = "http://localhost:5000/api";
+const apiBaseUrl = import.meta.env.VITE_API_URL as string | undefined;
 
-
-
-const apiBaseUrl =
-  (import.meta.env.VITE_API_URL as string | undefined) || DEFAULT_API_URL;
+if (!apiBaseUrl) {
+  throw new Error(
+    "VITE_API_URL is not defined. Please add it to your frontend .env file."
+  );
+}
 
 const normalizeApiBase = () => apiBaseUrl.replace(/\/+$/, "");
 
@@ -57,11 +58,7 @@ async function request<T>(path: string): Promise<T | null> {
 }
 
 export const getApiOrigin = () => {
-  try {
-    return new URL(normalizeApiBase()).origin;
-  } catch {
-    return "http://localhost:5000";
-  }
+  return new URL(normalizeApiBase()).origin;
 };
 
 export const getImageUrl = (path?: string | null): string => {
@@ -80,18 +77,39 @@ export const getImageUrl = (path?: string | null): string => {
   }
 
   const baseOrigin = getApiOrigin();
+
   return new URL(value, `${baseOrigin}/`).toString();
 };
 
-export const getSiteSettings = () => request<SiteSettings>("/site-settings");
-export const getHero = () => request<HeroSection>("/hero");
-export const getHelpSection = () => request<HelpSection>("/help");
-export const getAboutSection = () => request<AboutSection>("/about");
-export const getServices = () => request<Service[]>("/services");
-export const getTestimonials = () => request<Testimonial[]>("/testimonials");
+export const getSiteSettings = () =>
+  request<SiteSettings>("/site-settings");
+
+export const getHero = () =>
+  request<HeroSection>("/hero");
+
+export const getHelpSection = () =>
+  request<HelpSection>("/help");
+
+export const getAboutSection = () =>
+  request<AboutSection>("/about");
+
+export const getServices = () =>
+  request<Service[]>("/services");
+
+export const getTestimonials = () =>
+  request<Testimonial[]>("/testimonials");
+
 export const getWhyChooseUs = () =>
   request<WhyChooseUsItem[]>("/why-choose-us");
-export const getLabTests = () => request<LabTest[]>("/lab-tests");
-export const getDoctors = () => request<Doctor[]>("/doctors");
-export const getArticles = () => request<Article[]>("/articles");
-export const getFooter = () => request<FooterSettings>("/footer");
+
+export const getLabTests = () =>
+  request<LabTest[]>("/lab-tests");
+
+export const getDoctors = () =>
+  request<Doctor[]>("/doctors");
+
+export const getArticles = () =>
+  request<Article[]>("/articles");
+
+export const getFooter = () =>
+  request<FooterSettings>("/footer");
