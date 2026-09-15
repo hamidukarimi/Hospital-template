@@ -42,21 +42,8 @@ const getCardStyle = (color?: string | null) => {
 
   const normalized = color.toLowerCase();
 
-  if (normalized.includes("#dff8ee") || normalized.includes("green")) {
-    return {
-      background: "bg-[#dff8ee]",
-      border: "border-[#8dd9bb]",
-      shadow: "shadow-[0_18px_25px_rgba(76,194,151,0.28)]",
-      buttonHover: "hover:bg-[#effcf7]",
-      edge: "bg-[#8dd9bb]",
-    };
-  }
-
-  if (
-    normalized.includes("#eee7fb") ||
-    normalized.includes("purple") ||
-    normalized.includes("#b798df")
-  ) {
+  // Purple
+  if (normalized === "#8b5cf6") {
     return {
       background: "bg-[#eee7fb]",
       border: "border-[#b798df]",
@@ -66,12 +53,19 @@ const getCardStyle = (color?: string | null) => {
     };
   }
 
-  if (
-    normalized.includes("#ffebe4") ||
-    normalized.includes("#e4a18e") ||
-    normalized.includes("orange") ||
-    normalized.includes("red")
-  ) {
+  // Green
+  if (normalized === "#22c55e") {
+    return {
+      background: "bg-[#dff8ee]",
+      border: "border-[#8dd9bb]",
+      shadow: "shadow-[0_18px_25px_rgba(76,194,151,0.28)]",
+      buttonHover: "hover:bg-[#effcf7]",
+      edge: "bg-[#8dd9bb]",
+    };
+  }
+
+  // Red
+  if (normalized === "#ef4444") {
     return {
       background: "bg-[#ffebe4]",
       border: "border-[#e4a18e]",
