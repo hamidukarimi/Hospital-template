@@ -127,7 +127,7 @@ const Navbar = ({
           <img
             src={logoSrc}
             alt={hospitalName}
-            className="w-[70px] sm:w-[135px] lg:w-[70px]"
+            className="w-[40px] sm:w-[40px] lg:w-[50px]"
           />
         </a>
 
