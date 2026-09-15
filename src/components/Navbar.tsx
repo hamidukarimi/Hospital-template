@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  ChevronDown,
-  Menu,
-  Phone,
-  UserRound,
-  X,
-} from "lucide-react";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { ChevronDown, Menu, Phone, UserRound, X } from "lucide-react";
+import { getImageUrl } from "../lib/api";
+import type { SiteSettings } from "../types/api";
 
 interface MenuItem {
   label: string;
@@ -40,7 +36,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-const dropdownVariants = {
+const dropdownVariants: Variants = {
   hidden: {
     opacity: 0,
     y: -8,
@@ -52,7 +48,7 @@ const dropdownVariants = {
     scale: 1,
     transition: {
       duration: 0.2,
-      ease: "easeOut",
+      ease: [0.22, 1, 0.36, 1],
     },
   },
   exit: {
@@ -61,17 +57,30 @@ const dropdownVariants = {
     scale: 0.98,
     transition: {
       duration: 0.15,
-      ease: "easeIn",
+      ease: [0.4, 0, 1, 1],
     },
   },
 };
 
-const Navbar = () => {
+interface NavbarProps {
+  siteSettings?: SiteSettings | null;
+  isLoading?: boolean;
+}
+
+const Navbar = ({
+  siteSettings,
+  isLoading: _isLoading = false,
+}: NavbarProps) => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
 
   const navbarRef = useRef<HTMLElement>(null);
+  const hospitalName = siteSettings?.hospitalName || "Ali Hospital";
+  const logoSrc = siteSettings?.logo
+    ? getImageUrl(siteSettings.logo)
+    : "./h-logo.svg";
+  const emergencyPhone = siteSettings?.phone || "+011 3253 4567";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -101,9 +110,7 @@ const Navbar = () => {
   }, []);
 
   const toggleMobileDropdown = (label: string) => {
-    setMobileDropdown((current) =>
-      current === label ? null : label,
-    );
+    setMobileDropdown((current) => (current === label ? null : label));
   };
 
   return (
@@ -112,25 +119,17 @@ const Navbar = () => {
       className="fixed top-0 z-50 w-full px-4 py-4 sm:px-6 lg:px-8"
     >
       <div className="mx-auto flex w-full max-w-[1600px] items-center rounded-2xl bg-white px-4 py-3 shadow-[0_0_35px_rgba(124,58,237,0.15)] sm:px-5 lg:px-6">
-        {/* ================================================== */}
-        {/* LOGO */}
-        {/* ================================================== */}
-
         <a
           href="/"
-          aria-label="Ali Hospital home"
+          aria-label={`${hospitalName} home`}
           className="flex shrink-0 items-center"
         >
           <img
-            src="./h-logo.svg"
-            alt="Ali Hospital"
+            src={logoSrc}
+            alt={hospitalName}
             className="w-[70px] sm:w-[135px] lg:w-[70px]"
           />
         </a>
-
-        {/* ================================================== */}
-        {/* DESKTOP NAVIGATION */}
-        {/* ================================================== */}
 
         <div className="ml-auto hidden min-w-0 items-center xl:flex">
           {menuItems.map((menu) => {
@@ -146,10 +145,8 @@ const Navbar = () => {
               >
                 <button
                   type="button"
-                  onClick={() =>
-                    setActiveDropdown(isOpen ? null : menu.label)
-                  }
-                  className={`group flex items-center gap-1 whitespace-nowrap px-2 py-3 text-[13px] font-medium transition-colors duration-200 2xl:px-2.5 2xl:text-[13px] cursor-pointer ${
+                  onClick={() => setActiveDropdown(isOpen ? null : menu.label)}
+                  className={`group flex cursor-pointer items-center gap-1 whitespace-nowrap px-2 py-3 text-[13px] font-medium transition-colors duration-200 2xl:px-2.5 2xl:text-[13px] ${
                     isActive
                       ? "text-violet-600"
                       : "text-gray-700 hover:text-violet-600"
@@ -197,21 +194,15 @@ const Navbar = () => {
           })}
         </div>
 
-        {/* ================================================== */}
-        {/* DESKTOP ACTIONS */}
-        {/* ================================================== */}
-
         <div className="ml-3 hidden shrink-0 items-center gap-1.5 xl:flex">
-          {/* Emergency */}
-          <button
-            type="button"
+          <a
+            href={`tel:${emergencyPhone}`}
             className="flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-violet-600 px-3 py-2.5 text-xs font-semibold text-violet-600 transition-all duration-200 hover:border-red-500 hover:bg-red-500 hover:text-white 2xl:px-4 2xl:text-sm"
           >
             <Phone size={15} />
             Emergency
-          </button>
+          </a>
 
-          {/* Login */}
           <a
             href="/login"
             className="flex items-center gap-1 whitespace-nowrap rounded-lg px-2.5 py-2.5 text-xs font-medium text-gray-700 transition-colors hover:text-violet-600 2xl:px-3 2xl:text-sm"
@@ -220,7 +211,6 @@ const Navbar = () => {
             Log In
           </a>
 
-          {/* Contact */}
           <a
             href="/contact"
             className="whitespace-nowrap rounded-lg bg-violet-600 px-4 py-2.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-violet-700 hover:shadow-lg hover:shadow-violet-200 2xl:px-5 2xl:text-sm"
@@ -228,10 +218,6 @@ const Navbar = () => {
             Contact
           </a>
         </div>
-
-        {/* ================================================== */}
-        {/* MOBILE MENU BUTTON */}
-        {/* ================================================== */}
 
         <button
           type="button"
@@ -243,10 +229,6 @@ const Navbar = () => {
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
-
-      {/* ================================================== */}
-      {/* MOBILE MENU */}
-      {/* ================================================== */}
 
       <AnimatePresence>
         {mobileMenuOpen && (
@@ -310,15 +292,14 @@ const Navbar = () => {
                 );
               })}
 
-              {/* Mobile Actions */}
               <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-4">
-                <button
-                  type="button"
+                <a
+                  href={`tel:${emergencyPhone}`}
                   className="flex items-center justify-center gap-2 rounded-lg border border-violet-600 px-4 py-3 text-sm font-semibold text-violet-600 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
                 >
                   <Phone size={16} />
                   Emergency
-                </button>
+                </a>
 
                 <a
                   href="/login"

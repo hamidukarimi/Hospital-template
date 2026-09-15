@@ -1,35 +1,72 @@
 import { ArrowRight, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { getImageUrl } from "../lib/api";
+import type { HeroSection, SiteSettings } from "../types/api";
 
-const Hero = () => {
+interface HeroProps {
+  hero?: HeroSection | null;
+  siteSettings?: SiteSettings | null;
+  isLoading?: boolean;
+}
+
+const Hero = ({ hero, siteSettings, isLoading = false }: HeroProps) => {
+  const backgroundImage = getImageUrl(hero?.backgroundImage) || "./hero.jpg";
+  const displayTitle =
+    hero?.title || "Transforming Lives, Restoring Your Health";
+  const displayDescription =
+    hero?.description ||
+    "Embrace a world of comprehensive healthcare where your well-being takes center stage. At Meca, we're dedicated to providing you with personalized and compassionate medical services.";
+  const buttonText = hero?.buttonText || "Learn More";
+  const buttonUrl = hero?.buttonUrl || "#";
+  const locationLabel =
+    siteSettings?.address ||
+    "Hospa medical center operates more than 120 locations. Find the nearest...";
+
+  const titleParts = displayTitle.split(",");
+
+  if (isLoading) {
+    return (
+      <section className="relative min-h-[680px] overflow-hidden bg-slate-200 lg:min-h-[700px]">
+        <div className="relative z-10 mx-auto flex min-h-[680px] w-full max-w-[1600px] items-center px-6 pb-32 pt-20 sm:px-10 lg:min-h-[700px] lg:px-14 xl:px-20">
+          <div className="w-full max-w-[570px] animate-pulse space-y-4">
+            <div className="h-12 w-3/4 rounded bg-slate-300" />
+            <div className="h-12 w-2/3 rounded bg-slate-300" />
+            <div className="h-4 w-full rounded bg-slate-300" />
+            <div className="h-4 w-5/6 rounded bg-slate-300" />
+            <div className="h-12 w-36 rounded-full bg-slate-300" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       className="relative min-h-[680px] overflow-hidden bg-cover bg-center bg-no-repeat lg:min-h-[700px]"
       style={{
-        backgroundImage:
-          "url('./hero.jpg')",
+        backgroundImage: `url('${backgroundImage}')`,
       }}
     >
-      {/* Hero content */}
       <div className="relative z-10 mx-auto flex min-h-[680px] w-full max-w-[1600px] items-center px-6 pb-32 pt-20 sm:px-10 lg:min-h-[700px] lg:px-14 xl:px-20">
         <div className="w-full max-w-[570px]">
-          {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="text-[42px] leading-[1.08] tracking-[-1.5px] text-[#071535] sm:text-[50px] lg:text-[56px] xl:text-[50px]"
           >
-            <span className="block font-bold">
-              Transforming Lives,
-            </span>
-
-            <span className="block font-normal">
-              Restoring Your Health
-            </span>
+            {titleParts.length > 1 ? (
+              <>
+                <span className="block font-bold">{titleParts[0]},</span>
+                <span className="block font-normal">
+                  {titleParts.slice(1).join(",")}
+                </span>
+              </>
+            ) : (
+              <span className="block font-bold">{displayTitle}</span>
+            )}
           </motion.h1>
 
-          {/* Description */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -40,15 +77,11 @@ const Hero = () => {
             }}
             className="mt-5 max-w-[520px] text-sm leading-6 text-slate-600 sm:text-[15px]"
           >
-            Embrace a world of comprehensive healthcare where your
-            well-being takes center stage. At Meca, we're dedicated to
-            providing you with personalized and compassionate medical
-            services.
+            {displayDescription}
           </motion.p>
 
-          {/* Learn More Button */}
           <motion.a
-            href="#"
+            href={buttonUrl}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -60,13 +93,12 @@ const Hero = () => {
             whileTap={{ scale: 0.97 }}
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-500 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-violet-200/50 transition-colors duration-200 hover:bg-violet-600"
           >
-            <span>Learn More</span>
+            <span>{buttonText}</span>
             <ArrowRight size={16} strokeWidth={2} />
           </motion.a>
         </div>
       </div>
 
-      {/* Location Card */}
       <motion.div
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
@@ -83,24 +115,21 @@ const Hero = () => {
           </h2>
 
           <p className="mt-1 max-w-[380px] text-[11px] leading-4 text-slate-500">
-            Hospa medical center operates more than 120 locations. Find the
-            nearest...
+            {locationLabel}
           </p>
         </div>
 
-        {/* Location button */}
-        <motion.button
-          type="button"
+        <motion.a
+          href={siteSettings?.address ? "/contact" : "#"}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-400 text-white transition-colors duration-200 hover:bg-sky-500"
           aria-label="Find a nearby location"
         >
           <MapPin size={17} strokeWidth={2} />
-        </motion.button>
+        </motion.a>
       </motion.div>
 
-      {/* Bottom white curved edge */}
       <div className="absolute bottom-0 left-0 z-10 h-[38px] w-full rounded-t-[55px] bg-white sm:h-[45px] lg:h-[50px]" />
     </section>
   );
