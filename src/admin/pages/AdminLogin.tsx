@@ -1,7 +1,10 @@
 import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginAdmin } from "../services/adminApi";
 
 const AdminLogin = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,20 +20,14 @@ const AdminLogin = () => {
       const result = await loginAdmin(email, password);
 
       localStorage.setItem("adminToken", result.token);
-      localStorage.setItem(
-        "adminUser",
-        JSON.stringify(result.admin)
-      );
+      localStorage.setItem("adminUser", JSON.stringify(result.admin));
 
       console.log("Admin logged in:", result.admin);
 
+      navigate("/admin");
       // Dashboard navigation will be added next.
     } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Login failed"
-      );
+      setError(error instanceof Error ? error.message : "Login failed");
     } finally {
       setLoading(false);
     }
@@ -40,13 +37,9 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Aura Hospital
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Aura Hospital</h1>
 
-          <p className="mt-2 text-gray-500">
-            Admin Dashboard
-          </p>
+          <p className="mt-2 text-gray-500">Admin Dashboard</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -73,9 +66,7 @@ const AdminLogin = () => {
             <input
               type="password"
               value={password}
-              onChange={(event) =>
-                setPassword(event.target.value)
-              }
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter your password"
               required
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
