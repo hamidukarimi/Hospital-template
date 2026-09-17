@@ -56,8 +56,18 @@ const menuGroups = [
       },
       {
         to: "/admin/footer-settings",
-        label: "Footer",
+        label: "Footer Settings",
         icon: adminIconMap.settings,
+      },
+      {
+        to: "/admin/footer-columns",
+        label: "Footer Columns",
+        icon: adminIconMap.article,
+      },
+      {
+        to: "/admin/footer-links",
+        label: "Footer Links",
+        icon: adminIconMap.link,
       },
     ],
   },
@@ -113,7 +123,7 @@ export const AdminLayout = () => {
       <div className="flex min-h-screen">
         <aside className="hidden w-72 shrink-0 border-r border-slate-200 bg-[#111111] text-white lg:flex lg:flex-col">
           <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7C12B] text-lg font-bold text-slate-900">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#147BD5] text-lg font-bold text-white">
               A
             </div>
             <div>
@@ -138,7 +148,7 @@ export const AdminLayout = () => {
                           [
                             "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
                             isActive
-                              ? "bg-[#F7C12B] text-slate-900 shadow-md"
+                              ? "bg-[#147BD5] text-white shadow-md"
                               : "text-slate-300 hover:bg-white/5 hover:text-white",
                           ].join(" ")
                         }
@@ -205,7 +215,7 @@ export const AdminLayout = () => {
                 </button>
 
                 <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-2 py-1.5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F7C12B] text-sm font-semibold text-slate-900">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#147BD5] text-sm font-semibold text-white">
                     {adminUser?.name?.charAt(0)?.toUpperCase() || "A"}
                   </div>
 
@@ -255,7 +265,7 @@ export const AdminLayout = () => {
             >
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F7C12B] font-bold text-slate-900">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#147BD5] font-bold text-white">
                     A
                   </div>
                   <div>
@@ -290,7 +300,7 @@ export const AdminLayout = () => {
                               [
                                 "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
                                 isActive
-                                  ? "bg-[#F7C12B] text-slate-900"
+                                  ? "bg-[#147BD5] text-white"
                                   : "text-slate-300 hover:bg-white/5 hover:text-white",
                               ].join(" ")
                             }

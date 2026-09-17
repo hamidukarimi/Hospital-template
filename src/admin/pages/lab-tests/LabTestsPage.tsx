@@ -35,7 +35,7 @@ const emptyForm = {
   price: "",
   buttonText: "",
   buttonUrl: "",
-  color: "#F7C12B",
+  color: "#147BD5",
   isActive: true,
   sortOrder: 0,
 };
@@ -99,7 +99,7 @@ const LabTestsPage = () => {
           price: item.price?.toString() ?? "",
           buttonText: item.buttonText ?? "",
           buttonUrl: item.buttonUrl ?? "",
-          color: item.color ?? "#F7C12B",
+          color: item.color ?? "#147BD5",
           isActive: item.isActive ?? true,
           sortOrder: item.sortOrder ?? 0,
         });

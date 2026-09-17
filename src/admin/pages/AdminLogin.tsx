@@ -42,7 +42,7 @@ const AdminLogin = () => {
         className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.1)] md:p-8"
       >
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7C12B] text-2xl font-bold text-slate-900">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#147BD5] text-2xl font-bold text-white">
             A
           </div>
           <h1 className="text-3xl font-bold text-slate-900">Aura Hospital</h1>
@@ -70,7 +70,7 @@ const AdminLogin = () => {
               placeholder="admin@aurahospital.com"
               autoComplete="email"
               required
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#F7C12B] focus:bg-white focus:ring-4 focus:ring-[#F7C12B]/15"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#147BD5] focus:bg-white focus:ring-4 focus:ring-[#147BD5]/15"
             />
           </div>
 
@@ -89,7 +89,7 @@ const AdminLogin = () => {
               placeholder="Enter your password"
               autoComplete="current-password"
               required
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#F7C12B] focus:bg-white focus:ring-4 focus:ring-[#F7C12B]/15"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#147BD5] focus:bg-white focus:ring-4 focus:ring-[#147BD5]/15"
             />
           </div>
 

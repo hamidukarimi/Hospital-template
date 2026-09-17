@@ -112,12 +112,25 @@ const SocialMediaPage = () => {
     setSaving(true);
 
     try {
+      const resolvedSiteSettingsId =
+        form.siteSettingsId ||
+        (await adminApi.get<{ id?: string } | null>("/admin/site-settings"))
+          ?.id;
+
+      if (!resolvedSiteSettingsId) {
+        throw new Error("No site settings record is available.");
+      }
+
+      setForm((current) => ({
+        ...current,
+        siteSettingsId: resolvedSiteSettingsId,
+      }));
+
       const payload = {
         platform: form.platform,
         url: form.url.trim(),
         isActive: form.isActive,
-        siteSettingsId:
-          form.siteSettingsId || "00000000-0000-0000-0000-000000000000",
+        siteSettingsId: resolvedSiteSettingsId,
       };
 
       if (!payload.url) {

@@ -123,7 +123,7 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F7C12B]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#147BD5]">
             Overview
           </p>
           <h1 className="mt-1 text-3xl font-bold text-slate-900">
@@ -178,19 +178,19 @@ const AdminDashboard = () => {
           <ul className="mt-5 space-y-3 text-sm text-slate-200">
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
               <span>Website settings</span>
-              <Link to="/admin/site-settings" className="text-[#F7C12B]">
+              <Link to="/admin/site-settings" className="text-[#147BD5]">
                 Manage
               </Link>
             </li>
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
               <span>Footer content</span>
-              <Link to="/admin/footer-settings" className="text-[#F7C12B]">
+              <Link to="/admin/footer-settings" className="text-[#147BD5]">
                 Update
               </Link>
             </li>
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
               <span>Social channels</span>
-              <Link to="/admin/social-media" className="text-[#F7C12B]">
+              <Link to="/admin/social-media" className="text-[#147BD5]">
                 Review
               </Link>
             </li>

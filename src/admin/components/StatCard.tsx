@@ -26,7 +26,7 @@ export const StatCard = ({
           <p className="text-sm font-medium text-slate-500">{title}</p>
           <p className="mt-3 text-3xl font-bold text-slate-900">{value}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7C12B]/15 text-[#111111]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#147BD5]/10 text-[#147BD5]">
           <Icon className="h-5 w-5" />
         </div>
       </div>

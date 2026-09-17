@@ -33,7 +33,7 @@ const emptyForm = {
   category: "",
   linkText: "",
   linkUrl: "",
-  color: "#F7C12B",
+  color: "#147BD5",
   isActive: true,
   sortOrder: 0,
 };
@@ -101,7 +101,7 @@ const ServicesPage = () => {
           category: item.category ?? "",
           linkText: item.linkText ?? "",
           linkUrl: item.linkUrl ?? "",
-          color: item.color ?? "#F7C12B",
+          color: item.color ?? "#147BD5",
           isActive: item.isActive ?? true,
           sortOrder: item.sortOrder ?? 0,
         });

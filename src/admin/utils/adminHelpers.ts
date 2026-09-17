@@ -7,6 +7,7 @@ import {
   GraduationCap,
   HeartPulse,
   Info,
+  Link,
   Microscope,
   ShieldCheck,
   Stethoscope,
@@ -38,7 +39,8 @@ export type AdminIconKey =
   | "lab"
   | "social"
   | "settings"
-  | "profile";
+  | "profile"
+  | "link";
 
 export const adminIconMap: Record<AdminIconKey, LucideIcon> = {
   service: BriefcaseMedical,
@@ -51,6 +53,7 @@ export const adminIconMap: Record<AdminIconKey, LucideIcon> = {
   social: Users,
   settings: Building2,
   profile: WalletCards,
+  link: Link,
 };
 
 export const helperIconMap: Record<string, LucideIcon> = {

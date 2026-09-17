@@ -52,12 +52,14 @@ const AdminProfile = () => {
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7C12B] text-2xl font-bold text-slate-900">
-              {user.name.charAt(0).toUpperCase()}
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#147BD5] text-2xl font-bold text-white">
+              {user.name?.charAt(0)?.toUpperCase() || "A"}
             </div>
 
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">{user.name}</h1>
+              <h1 className="text-2xl font-bold text-slate-900">
+                {user.name || "Admin"}
+              </h1>
               <p className="text-sm text-slate-500">Hospital administrator</p>
             </div>
           </div>

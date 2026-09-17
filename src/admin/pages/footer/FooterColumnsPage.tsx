@@ -108,12 +108,25 @@ const FooterColumnsPage = () => {
     setSaving(true);
 
     try {
+      const resolvedFooterSettingsId =
+        form.footerSettingsId ||
+        (await adminApi.get<{ id?: string } | null>("/admin/footer-settings"))
+          ?.id;
+
+      if (!resolvedFooterSettingsId) {
+        throw new Error("No footer settings record is available.");
+      }
+
+      setForm((current) => ({
+        ...current,
+        footerSettingsId: resolvedFooterSettingsId,
+      }));
+
       const payload = {
         title: form.title.trim(),
         sortOrder: Number(form.sortOrder) || 0,
         isActive: form.isActive,
-        footerSettingsId:
-          form.footerSettingsId || "00000000-0000-0000-0000-000000000000",
+        footerSettingsId: resolvedFooterSettingsId,
       };
 
       if (!payload.title) {
