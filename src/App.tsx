@@ -19,6 +19,8 @@ import SocialMediaPage from "./admin/pages/social-media/SocialMediaPage";
 import TestimonialPage from "./admin/pages/testimonials/TestimonialsPage";
 import WhyChooseUsPage from "./admin/pages/why-choose-us/WhyChooseUsPage";
 
+import ServiceDetailsPage from "./pages/ServiceDetailsPage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -66,7 +68,10 @@ function App() {
                 element={<FooterLinksPage />}
               />
             </Route>
+
+            
           </Route>
+          <Route path="/services/details" element={<ServiceDetailsPage />} />
         </Routes>
       </ToastProvider>
     </BrowserRouter>
