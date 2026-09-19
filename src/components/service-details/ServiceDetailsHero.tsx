@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Headphones, Star } from "lucide-react";
+import { ArrowRight, Clock, Headphones, PhoneCall, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Service, SiteSettings, Testimonial } from "../../types/api";
 import { getImageUrl } from "../../lib/api";
@@ -17,6 +17,7 @@ export default function ServiceDetailsHero({
 }: Props) {
   const stats = (service.metrics ?? []).slice(0, 2);
   const patients = testimonials.filter((item) => item.isActive).slice(0, 4);
+
   return (
     <section className="relative overflow-hidden">
       <div className="relative min-h-[650px] bg-slate-100">
@@ -30,6 +31,7 @@ export default function ServiceDetailsHero({
         <div className="absolute inset-0 bg-white/75" />
         <div className="relative mx-auto flex min-h-[650px] max-w-7xl items-center px-6 py-20 lg:px-8">
           <div className="grid w-full items-center gap-10 lg:grid-cols-[1fr_0.75fr]">
+            {/* Left Main Content Column */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -90,13 +92,16 @@ export default function ServiceDetailsHero({
                 </div>
               ) : null}
             </motion.div>
+
+            {/* Right Side Cards Stack */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
               className="flex justify-center lg:justify-end"
             >
-              <div className="flex flex-col gap-4">
+              <div className="flex w-full max-w-xs flex-col gap-4">
+                {/* 1. Dynamic Metric Cards (from ServiceMetric) */}
                 {stats.map((stat) => (
                   <div
                     key={stat.id}
@@ -111,14 +116,39 @@ export default function ServiceDetailsHero({
                     </p>
                   </div>
                 ))}
+
+                {/* 2. Visiting Hours Card (from SiteSettings) */}
+                {/* {siteSettings?.mondayFridayVisitingHours || siteSettings?.sundayVisitingHours ? (
+                  <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-lg backdrop-blur-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#147BD5]">
+                        <Clock size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                          Visiting Hours
+                        </p>
+                        <p className="text-xs text-slate-600 mt-0.5">
+                          Mon - Fri: {siteSettings.mondayFridayVisitingHours || "8:00 AM - 8:00 PM"}
+                        </p>
+                        {siteSettings.sundayVisitingHours ? (
+                          <p className="text-xs text-slate-600">
+                            Sun: {siteSettings.sundayVisitingHours}
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ) : null} */}
+
+                {/* 3. Original Patient Support Card */}
                 <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-lg backdrop-blur-sm">
-                  <div className="flex h-24 w-36 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-slate-200">
-                    <Headphones className="text-[#147BD5]" size={34} />
+                  <div className="flex h-20 w-full items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-slate-200">
+                    <Headphones className="text-[#147BD5]" size={32} />
                   </div>
                   <div className="mt-3 text-center">
                     <p className="font-semibold text-slate-900">
-                      {siteSettings?.hospitalName || service.title} Patient
-                      Support
+                      {siteSettings?.hospitalName || service.title} Patient Support
                     </p>
                     <p className="mt-1 text-xs text-slate-600">
                       {siteSettings?.phone ||
@@ -127,6 +157,28 @@ export default function ServiceDetailsHero({
                     </p>
                   </div>
                 </div>
+
+                {/* 4. Direct Emergency / Contact Card (from SiteSettings) */}
+                {/* {siteSettings?.phone ? (
+                  <a
+                    href={`tel:${siteSettings.phone.replace(/\s+/g, "")}`}
+                    className="group rounded-2xl border border-blue-100 bg-gradient-to-r from-[#147BD5] to-[#106dbd] p-4 text-white shadow-lg transition hover:shadow-xl hover:brightness-105"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white">
+                        <PhoneCall size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-blue-100">
+                          Need Immediate Assistance?
+                        </p>
+                        <p className="text-sm font-bold tracking-wide">
+                          {siteSettings.phone}
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                ) : null} */}
               </div>
             </motion.div>
           </div>
