@@ -68,10 +68,8 @@ function App() {
                 element={<FooterLinksPage />}
               />
             </Route>
-
-            
           </Route>
-          <Route path="/services/details" element={<ServiceDetailsPage />} />
+          <Route path="/services/:slug" element={<ServiceDetailsPage />} />
         </Routes>
       </ToastProvider>
     </BrowserRouter>

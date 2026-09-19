@@ -16,7 +16,7 @@ const apiBaseUrl = import.meta.env.VITE_API_URL as string | undefined;
 
 if (!apiBaseUrl) {
   throw new Error(
-    "VITE_API_URL is not defined. Please add it to your frontend .env file."
+    "VITE_API_URL is not defined. Please add it to your frontend .env file.",
   );
 }
 
@@ -81,35 +81,28 @@ export const getImageUrl = (path?: string | null): string => {
   return new URL(value, `${baseOrigin}/`).toString();
 };
 
-export const getSiteSettings = () =>
-  request<SiteSettings>("/site-settings");
+export const getSiteSettings = () => request<SiteSettings>("/site-settings");
 
-export const getHero = () =>
-  request<HeroSection>("/hero");
+export const getHero = () => request<HeroSection>("/hero");
 
-export const getHelpSection = () =>
-  request<HelpSection>("/help");
+export const getHelpSection = () => request<HelpSection>("/help");
 
-export const getAboutSection = () =>
-  request<AboutSection>("/about");
+export const getAboutSection = () => request<AboutSection>("/about");
 
-export const getServices = () =>
-  request<Service[]>("/services");
+export const getServices = () => request<Service[]>("/services");
 
-export const getTestimonials = () =>
-  request<Testimonial[]>("/testimonials");
+export const getServiceBySlug = (slug: string) =>
+  request<Service>(`/services/${encodeURIComponent(slug)}`);
+
+export const getTestimonials = () => request<Testimonial[]>("/testimonials");
 
 export const getWhyChooseUs = () =>
   request<WhyChooseUsItem[]>("/why-choose-us");
 
-export const getLabTests = () =>
-  request<LabTest[]>("/lab-tests");
+export const getLabTests = () => request<LabTest[]>("/lab-tests");
 
-export const getDoctors = () =>
-  request<Doctor[]>("/doctors");
+export const getDoctors = () => request<Doctor[]>("/doctors");
 
-export const getArticles = () =>
-  request<Article[]>("/articles");
+export const getArticles = () => request<Article[]>("/articles");
 
-export const getFooter = () =>
-  request<FooterSettings>("/footer");
+export const getFooter = () => request<FooterSettings>("/footer");
