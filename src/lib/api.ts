@@ -57,6 +57,39 @@ async function request<T>(path: string): Promise<T | null> {
   }
 }
 
+async function postRequest<T, B>(path: string, body: B): Promise<T | null> {
+  const url = buildUrl(path);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    const payload = (await response.json()) as {
+      success?: boolean;
+      data?: T;
+    };
+
+    if (payload.success === false) {
+      return null;
+    }
+
+    return (payload.data ?? null) as T | null;
+  } catch (error) {
+    console.error(`POST API request failed for ${url}:`, error);
+    return null;
+  }
+}
+
 export const getApiOrigin = () => {
   return new URL(normalizeApiBase()).origin;
 };
@@ -106,3 +139,14 @@ export const getDoctors = () => request<Doctor[]>("/doctors");
 export const getArticles = () => request<Article[]>("/articles");
 
 export const getFooter = () => request<FooterSettings>("/footer");
+
+export interface ContactSubmissionPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  department?: string;
+  message: string;
+}
+
+export const submitContactMessage = (payload: ContactSubmissionPayload) =>
+  postRequest<{ id: string }, ContactSubmissionPayload>("/contact", payload);

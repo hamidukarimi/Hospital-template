@@ -23,7 +23,8 @@ export default function ServiceOverview({ service }: { service: Service }) {
               {service.category || "About Our Services"}
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
-              {service.overviewTitle || "Compassionate Care, Advanced Technology"}
+              {service.overviewTitle ||
+                "Compassionate Care, Advanced Technology"}
             </h2>
           </div>
           <div>

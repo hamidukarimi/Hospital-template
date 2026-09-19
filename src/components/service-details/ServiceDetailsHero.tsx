@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Clock, Headphones, PhoneCall, Star } from "lucide-react";
+import { ArrowRight, Headphones, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Service, SiteSettings, Testimonial } from "../../types/api";
 import { getImageUrl } from "../../lib/api";

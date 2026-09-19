@@ -65,11 +65,8 @@ export default function ServiceDetailsPage() {
     <div className="min-h-screen bg-white">
       <Navbar siteSettings={siteSettings} isLoading={loading} />
       <main>
-        {loading ? (
-          <div className="mx-auto max-w-7xl px-6 py-32 text-center text-slate-600">
-            Loading service details...
-          </div>
-        ) : null}
+        {loading ? <ServiceDetailsHeroSkeleton /> : null}
+
         {!loading && error ? (
           <div className="mx-auto max-w-7xl px-6 py-32 text-center">
             <h1 className="text-3xl font-bold text-slate-900">
@@ -80,6 +77,7 @@ export default function ServiceDetailsPage() {
             </p>
           </div>
         ) : null}
+
         {!loading && service ? (
           <>
             <ServiceDetailsHero
@@ -97,6 +95,46 @@ export default function ServiceDetailsPage() {
         ) : null}
       </main>
       <Footer footer={footer} siteSettings={siteSettings} isLoading={loading} />
+    </div>
+  );
+}
+
+function ServiceDetailsHeroSkeleton() {
+  return (
+    <div className="relative overflow-hidden bg-slate-900 py-20 lg:py-28 text-white animate-pulse">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* Left Column: Text & CTA Skeletons */}
+          <div className="space-y-6">
+            {/* Category Tag */}
+            <div className="h-4 w-32 rounded-full bg-slate-800" />
+
+            {/* Title Block */}
+            <div className="space-y-3">
+              <div className="h-10 w-4/5 rounded-lg bg-slate-800" />
+              <div className="h-10 w-3/5 rounded-lg bg-slate-800" />
+            </div>
+
+            {/* Description Lines */}
+            <div className="space-y-2 pt-2">
+              <div className="h-4 w-full rounded bg-slate-800" />
+              <div className="h-4 w-11/12 rounded bg-slate-800" />
+              <div className="h-4 w-4/5 rounded bg-slate-800" />
+            </div>
+
+            {/* Action Buttons Skeleton */}
+            <div className="flex flex-wrap items-center gap-4 pt-4">
+              <div className="h-12 w-44 rounded-full bg-slate-800" />
+              <div className="h-12 w-36 rounded-full bg-slate-800" />
+            </div>
+          </div>
+
+          {/* Right Column: Hero Image Container Skeleton */}
+          <div className="relative flex justify-center">
+            <div className="aspect-[4/3] w-full max-w-md rounded-3xl bg-slate-800 shadow-2xl lg:max-w-lg" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

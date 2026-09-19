@@ -10,8 +10,10 @@ export interface SiteSettings {
   hospitalName: string;
   logo?: string | null;
   phone: string;
+  emergencyPhone?: string | null;
   email: string;
   address: string;
+  mapEmbedUrl?: string | null;
   sundayVisitingHours?: string | null;
   mondayFridayVisitingHours?: string | null;
   socialMedia: SocialMedia[];

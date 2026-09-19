@@ -20,6 +20,7 @@ import TestimonialPage from "./admin/pages/testimonials/TestimonialsPage";
 import WhyChooseUsPage from "./admin/pages/why-choose-us/WhyChooseUsPage";
 
 import ServiceDetailsPage from "./pages/ServiceDetailsPage";
+import ContactPage from "./pages/ContactPage"; // <-- 1. Import ContactPage
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
       <ToastProvider>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<ContactPage />} /> {/* <-- 2. Add Route */}
 
           <Route path="/admin/login" element={<AdminLogin />} />
 
