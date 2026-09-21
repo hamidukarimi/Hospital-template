@@ -50,6 +50,11 @@ const menuGroups = [
         icon: adminIconMap.settings,
       },
       {
+        to: "/admin/about",
+        label: "About Information",
+        icon: adminIconMap.about,
+      },
+      {
         to: "/admin/social-media",
         label: "Social Media",
         icon: adminIconMap.social,

@@ -15,6 +15,7 @@ import HelpCardsPage from "./admin/pages/help-cards/HelpCardsPage";
 import LabTestsPage from "./admin/pages/lab-tests/LabTestsPage";
 import ServicePage from "./admin/pages/services/ServicesPage";
 import SiteSettingsPage from "./admin/pages/site-settings/SiteSettingsPage";
+import AboutAdminPage from "./admin/pages/about/AboutPage";
 import SocialMediaPage from "./admin/pages/social-media/SocialMediaPage";
 import TestimonialPage from "./admin/pages/testimonials/TestimonialsPage";
 import WhyChooseUsPage from "./admin/pages/why-choose-us/WhyChooseUsPage";
@@ -55,6 +56,7 @@ function App() {
                 path="/admin/site-settings"
                 element={<SiteSettingsPage />}
               />
+              <Route path="/admin/about" element={<AboutAdminPage />} />
               <Route
                 path="/admin/social-media/*"
                 element={<SocialMediaPage />}

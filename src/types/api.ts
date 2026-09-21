@@ -52,8 +52,23 @@ export interface HelpSection {
   cards: HelpCard[];
 }
 
-export interface AboutSection {
+export interface AboutStatItem {
+  icon?: string;
+  value: string;
+  title: string;
+  description: string;
+}
+
+export interface AboutMilestoneItem {
+  year: string;
+  title: string;
+  description: string;
+}
+
+/** Singleton institutional / About information (reusable site-wide). */
+export interface About {
   id: string;
+  singletonKey: string;
   smallTitle?: string | null;
   title: string;
   description: string;
@@ -67,8 +82,40 @@ export interface AboutSection {
   rating?: number | string | null;
   badgeText?: string | null;
   badgeValue?: string | null;
+  heroBadge?: string | null;
+  heroTitle?: string | null;
+  heroTitleHighlight?: string | null;
+  heroSubtitle?: string | null;
+  heroButtonText?: string | null;
+  heroImage?: string | null;
+  heroImageCaption?: string | null;
+  missionTitle?: string | null;
+  missionTagline?: string | null;
+  missionDescription?: string | null;
+  missionButtonText?: string | null;
+  visionTitle?: string | null;
+  visionTagline?: string | null;
+  visionDescription?: string | null;
+  visionButtonText?: string | null;
+  statsEyebrow?: string | null;
+  statsTitle?: string | null;
+  statsDescription?: string | null;
+  stats?: AboutStatItem[] | null;
+  milestonesEyebrow?: string | null;
+  milestonesTitle?: string | null;
+  milestonesDescription?: string | null;
+  milestonesImage?: string | null;
+  milestonesImageCaption?: string | null;
+  milestones?: AboutMilestoneItem[] | null;
+  ctaTitle?: string | null;
+  ctaSubtitle?: string | null;
+  ctaButtonText?: string | null;
+  ctaButtonUrl?: string | null;
   isActive: boolean;
 }
+
+/** @deprecated Use About — kept as alias for homepage teaser fields */
+export type AboutSection = About;
 
 export interface Service {
   id: string;

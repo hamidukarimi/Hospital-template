@@ -1,4 +1,5 @@
 import type {
+  About,
   AboutSection,
   Article,
   Doctor,
@@ -121,6 +122,8 @@ export const getHero = () => request<HeroSection>("/hero");
 export const getHelpSection = () => request<HelpSection>("/help");
 
 export const getAboutSection = () => request<AboutSection>("/about");
+
+export const getAbout = () => request<About>("/about");
 
 export const getServices = () => request<Service[]>("/services");
 

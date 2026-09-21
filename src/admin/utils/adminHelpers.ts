@@ -40,7 +40,8 @@ export type AdminIconKey =
   | "social"
   | "settings"
   | "profile"
-  | "link";
+  | "link"
+  | "about";
 
 export const adminIconMap: Record<AdminIconKey, LucideIcon> = {
   service: BriefcaseMedical,
@@ -54,6 +55,7 @@ export const adminIconMap: Record<AdminIconKey, LucideIcon> = {
   settings: Building2,
   profile: WalletCards,
   link: Link,
+  about: Info,
 };
 
 export const helperIconMap: Record<string, LucideIcon> = {
