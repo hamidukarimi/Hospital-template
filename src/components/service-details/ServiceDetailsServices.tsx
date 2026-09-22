@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { Service } from "../../types/api";
 import { getImageUrl } from "../../lib/api";
 
@@ -29,9 +30,9 @@ export default function ServiceDetailsServices({
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {visible.map((service) => (
-            <a
+            <Link
               key={service.id}
-              href={`/services/${service.slug}`}
+              to={`/services/${service.slug}`}
               className="group overflow-hidden rounded-[2rem] border border-white bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="h-52 overflow-hidden">
@@ -60,7 +61,7 @@ export default function ServiceDetailsServices({
                   />
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
         {related.length > 4 ? (

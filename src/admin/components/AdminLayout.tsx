@@ -61,11 +61,6 @@ const menuGroups = [
         icon: adminIconMap.social,
       },
       {
-        to: "/admin/footer-settings",
-        label: "Footer Settings",
-        icon: adminIconMap.settings,
-      },
-      {
         to: "/admin/footer-columns",
         label: "Footer Columns",
         icon: adminIconMap.article,

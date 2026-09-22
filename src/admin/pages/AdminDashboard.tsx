@@ -183,8 +183,8 @@ const AdminDashboard = () => {
               </Link>
             </li>
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
-              <span>Footer content</span>
-              <Link to="/admin/footer-settings" className="text-[#147BD5]">
+              <span>Footer columns</span>
+              <Link to="/admin/footer-columns" className="text-[#147BD5]">
                 Update
               </Link>
             </li>

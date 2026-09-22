@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Headphones, Star } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Service, SiteSettings, Testimonial } from "../../types/api";
 import { getImageUrl } from "../../lib/api";
+import { isInternalPath } from "../../lib/color";
 
 interface Props {
   service: Service;
@@ -48,13 +50,23 @@ export default function ServiceDetailsHero({
                 {service.description}
               </p>
               {service.ctaText && service.ctaUrl ? (
-                <a
-                  href={service.ctaUrl}
-                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#147BD5] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-[#106dbd]"
-                >
-                  {service.ctaText}
-                  <ArrowRight size={17} />
-                </a>
+                isInternalPath(service.ctaUrl) ? (
+                  <Link
+                    to={service.ctaUrl}
+                    className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#147BD5] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-[#106dbd]"
+                  >
+                    {service.ctaText}
+                    <ArrowRight size={17} />
+                  </Link>
+                ) : (
+                  <a
+                    href={service.ctaUrl}
+                    className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#147BD5] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-[#106dbd]"
+                  >
+                    {service.ctaText}
+                    <ArrowRight size={17} />
+                  </a>
+                )
               ) : null}
               {patients.length ? (
                 <div className="mt-9 flex items-center gap-3">

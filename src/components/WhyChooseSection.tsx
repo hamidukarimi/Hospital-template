@@ -1,12 +1,14 @@
-import {
-  ArrowRight,
-  Heart,
-  ShieldCheck,
-  Sparkles,
-  Stethoscope,
-  type LucideIcon,
-} from "lucide-react";
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { getImageUrl } from "../lib/api";
+import {
+  isInternalPath,
+  mixWithWhite,
+  normalizeHex,
+  rgba,
+} from "../lib/color";
 import type { WhyChooseUsItem } from "../types/api";
 
 interface WhyChooseSectionProps {
@@ -14,26 +16,19 @@ interface WhyChooseSectionProps {
   isLoading?: boolean;
 }
 
-const iconMap: Record<string, LucideIcon> = {
-  heart: Heart,
-  shield: ShieldCheck,
-  sparkles: Sparkles,
-  stethoscope: Stethoscope,
-  hospital: ShieldCheck,
-  clock: Heart,
-  default: Heart,
-};
-
-const pickIcon = (iconName?: string | null) => {
-  const normalized = (iconName || "default").toLowerCase();
-  return iconMap[normalized] || Heart;
-};
+const INITIAL_VISIBLE = 6;
 
 const WhyChooseSection = ({
   items = [],
   isLoading = false,
 }: WhyChooseSectionProps) => {
+  const [expanded, setExpanded] = useState(false);
   const cards = items.length > 0 ? items : [];
+  const visibleCards =
+    expanded || cards.length <= INITIAL_VISIBLE
+      ? cards
+      : cards.slice(0, INITIAL_VISIBLE);
+  const canToggle = cards.length > INITIAL_VISIBLE;
 
   if (isLoading) {
     return (
@@ -56,7 +51,6 @@ const WhyChooseSection = ({
 
   return (
     <section className="relative overflow-hidden bg-[#f3f8fc] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-      {/* Decorative shapes */}
       <div className="pointer-events-none absolute -left-[65px] -top-[65px] h-[180px] w-[180px] rounded-full border-[25px] border-[#dcecf8]" />
 
       <div className="pointer-events-none absolute -left-[25px] -top-[25px] h-[100px] w-[100px] rounded-full bg-white/80" />
@@ -79,7 +73,6 @@ const WhyChooseSection = ({
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1050px]">
-        {/* Section heading */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -98,61 +91,19 @@ const WhyChooseSection = ({
           </h2>
         </motion.div>
 
-        {/* Cards */}
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
           {cards.length === 0 ? (
             <div className="col-span-full rounded-[18px] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-slate-500">
               Why choose us information is currently unavailable.
             </div>
           ) : (
-            cards.map((reason, index) => {
-              const Icon = pickIcon(reason.icon);
-
-              const color = reason.color?.toLowerCase();
-
-              /*
-               * Card styling is controlled by the color
-               * stored in the Neon database.
-               */
-              const cardStyle = (() => {
-                switch (color) {
-                  // Yellow
-                  case "#f7c12b":
-                    return {
-                      border: "border-[#e5b21f]",
-                      shadow:
-                        "shadow-[0_18px_28px_rgba(247,193,43,0.22)]",
-                      icon: "bg-[#82acd8]",
-                    };
-
-                  // Purple
-                  case "#8b5cf6":
-                    return {
-                      border: "border-[#b798df]",
-                      shadow:
-                        "shadow-[0_18px_28px_rgba(142,91,194,0.22)]",
-                      icon: "bg-[#b99582]",
-                    };
-
-                  // Red
-                  case "#ef4444":
-                    return {
-                      border: "border-[#e4a18e]",
-                      shadow:
-                        "shadow-[0_18px_28px_rgba(224,119,94,0.22)]",
-                      icon: "bg-[#64c2d5]",
-                    };
-
-                  // Fallback
-                  default:
-                    return {
-                      border: "border-[#83d4df]",
-                      shadow:
-                        "shadow-[0_18px_28px_rgba(73,181,195,0.22)]",
-                      icon: "bg-[#64c2d5]",
-                    };
-                }
-              })();
+            visibleCards.map((reason, index) => {
+              const base = normalizeHex(reason.color, "#64c2d5");
+              const border = mixWithWhite(base, 0.35);
+              const shadow = `0 18px 28px ${rgba(base, 0.22)}`;
+              const imageBadge = mixWithWhite(base, 0.15);
+              const imageSrc = getImageUrl(reason.image);
+              const linkUrl = reason.linkUrl || "#";
 
               return (
                 <motion.article
@@ -165,53 +116,82 @@ const WhyChooseSection = ({
                     delay: index * 0.1,
                   }}
                   whileHover={{ y: -5 }}
-                  className={`relative min-h-[340px] rounded-[18px] border-2 bg-white p-5 ${cardStyle.border} ${cardStyle.shadow}`}
+                  className="relative min-h-[340px] rounded-[18px] border-2 bg-white p-5"
+                  style={{ borderColor: border, boxShadow: shadow }}
                 >
-                  {/* Icon */}
-                  <div className="relative h-[76px] w-[76px]">
+                  <div className="relative h-[76px] w-[76px] overflow-hidden">
                     <div
-                      className={`absolute inset-0 flex items-center justify-center ${cardStyle.icon}`}
+                      className="absolute inset-0 flex items-center justify-center overflow-hidden"
                       style={{
+                        backgroundColor: imageBadge,
                         clipPath:
                           "polygon(50% 0%, 62% 14%, 77% 8%, 82% 25%, 98% 31%, 88% 46%, 100% 60%, 84% 69%, 87% 87%, 68% 84%, 58% 100%, 45% 87%, 29% 96%, 25% 77%, 7% 75%, 14% 57%, 0% 44%, 16% 32%, 11% 14%, 31% 18%)",
                       }}
                     >
-                      <Icon
-                        size={28}
-                        strokeWidth={1.8}
-                        className="text-white"
-                      />
+                      {imageSrc ? (
+                        <img
+                          src={imageSrc}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-[11px] font-semibold text-white">
+                          Image
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  {/* Title */}
                   <h3 className="mt-5 max-w-[310px] text-[22px] font-bold leading-[1.25] tracking-[-0.5px] text-[#071535]">
                     {reason.title}
                   </h3>
 
-                  {/* Description */}
                   <p className="mt-4 text-[14px] leading-6 text-[#26313e]">
                     {reason.description}
                   </p>
 
-                  {/* Link */}
-                  <a
-                    href={reason.linkUrl || "#"}
-                    className="group mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-[#243a50]"
-                  >
-                    <span>{reason.linkText || "Learn More"}</span>
-
-                    <ArrowRight
-                      size={16}
-                      strokeWidth={1.8}
-                      className="transition-transform duration-200 group-hover:translate-x-1"
-                    />
-                  </a>
+                  {isInternalPath(linkUrl) ? (
+                    <Link
+                      to={linkUrl}
+                      className="group mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-[#243a50]"
+                    >
+                      <span>{reason.linkText || "Learn More"}</span>
+                      <ArrowRight
+                        size={16}
+                        strokeWidth={1.8}
+                        className="transition-transform duration-200 group-hover:translate-x-1"
+                      />
+                    </Link>
+                  ) : (
+                    <a
+                      href={linkUrl}
+                      className="group mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-[#243a50]"
+                    >
+                      <span>{reason.linkText || "Learn More"}</span>
+                      <ArrowRight
+                        size={16}
+                        strokeWidth={1.8}
+                        className="transition-transform duration-200 group-hover:translate-x-1"
+                      />
+                    </a>
+                  )}
                 </motion.article>
               );
             })
           )}
         </div>
+
+        {canToggle && (
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setExpanded((current) => !current)}
+              className="inline-flex items-center gap-2 rounded-full border border-[#b7c9d8] bg-white px-6 py-2.5 text-[13px] font-medium text-[#071535] transition-colors hover:border-[#315e9d] hover:text-[#315e9d]"
+            >
+              {expanded ? "See less" : "See more"}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

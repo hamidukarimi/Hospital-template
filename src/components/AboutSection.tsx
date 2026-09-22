@@ -1,6 +1,8 @@
 import { ArrowRight, Phone } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../lib/api";
+import { isInternalPath } from "../lib/color";
 import type {
   AboutSection as AboutSectionData,
   SiteSettings,
@@ -100,15 +102,23 @@ const AboutSection = ({
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <motion.a
-              href={buttonUrl}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:bg-violet-600"
-            >
-              {buttonText}
-              <ArrowRight size={12} strokeWidth={2} />
-            </motion.a>
+            {isInternalPath(buttonUrl) ? (
+              <Link
+                to={buttonUrl}
+                className="inline-flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:scale-[1.03] hover:bg-violet-600"
+              >
+                {buttonText}
+                <ArrowRight size={12} strokeWidth={2} />
+              </Link>
+            ) : (
+              <a
+                href={buttonUrl}
+                className="inline-flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:scale-[1.03] hover:bg-violet-600"
+              >
+                {buttonText}
+                <ArrowRight size={12} strokeWidth={2} />
+              </a>
+            )}
 
             <div className="flex items-center gap-2">
               <img
@@ -127,10 +137,20 @@ const AboutSection = ({
               </div>
             </div>
 
-            <div className="ml-1 hidden h-6 w-16 items-center justify-center text-[6px] font-medium text-slate-400 sm:flex">
-              {siteSettings?.hospitalName?.slice(0, 6).toUpperCase() || "HOSPA"}{" "}
-              LOGO
-            </div>
+            {(getImageUrl(aboutSection?.informationLogo) ||
+              getImageUrl(siteSettings?.logo)) && (
+              <div className="ml-1 hidden items-center sm:flex">
+                <img
+                  src={
+                    getImageUrl(aboutSection?.informationLogo) ||
+                    getImageUrl(siteSettings?.logo) ||
+                    ""
+                  }
+                  alt={siteSettings?.hospitalName || "Hospital logo"}
+                  className="h-6 w-auto max-w-[72px] object-contain"
+                />
+              </div>
+            )}
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-5">

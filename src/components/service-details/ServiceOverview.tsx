@@ -1,8 +1,10 @@
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Service } from "../../types/api";
 import { getImageUrl } from "../../lib/api";
+import { isInternalPath } from "../../lib/color";
 
 export default function ServiceOverview({ service }: { service: Service }) {
   console.log("Service Overview Received:", service);
@@ -68,13 +70,23 @@ export default function ServiceOverview({ service }: { service: Service }) {
                 {service.overviewDescription || service.description}
               </p>
               {service.ctaText && service.ctaUrl ? (
-                <a
-                  href={service.ctaUrl}
-                  className="mt-4 inline-flex self-start items-center gap-1.5 rounded-full bg-[#147BD5] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#106dbd]"
-                >
-                  {service.ctaText}
-                  <ArrowRight size={14} />
-                </a>
+                isInternalPath(service.ctaUrl) ? (
+                  <Link
+                    to={service.ctaUrl}
+                    className="mt-4 inline-flex self-start items-center gap-1.5 rounded-full bg-[#147BD5] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#106dbd]"
+                  >
+                    {service.ctaText}
+                    <ArrowRight size={14} />
+                  </Link>
+                ) : (
+                  <a
+                    href={service.ctaUrl}
+                    className="mt-4 inline-flex self-start items-center gap-1.5 rounded-full bg-[#147BD5] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#106dbd]"
+                  >
+                    {service.ctaText}
+                    <ArrowRight size={14} />
+                  </a>
+                )
               ) : null}
             </div>
 
@@ -132,13 +144,23 @@ export default function ServiceOverview({ service }: { service: Service }) {
                 {service.description}
               </p>
               {service.linkText && service.linkUrl ? (
-                <a
-                  href={service.linkUrl}
-                  className="mt-4 inline-flex self-start items-center gap-1.5 rounded-full bg-[#147BD5] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#106dbd]"
-                >
-                  {service.linkText}
-                  <ArrowRight size={14} />
-                </a>
+                isInternalPath(service.linkUrl) ? (
+                  <Link
+                    to={service.linkUrl}
+                    className="mt-4 inline-flex self-start items-center gap-1.5 rounded-full bg-[#147BD5] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#106dbd]"
+                  >
+                    {service.linkText}
+                    <ArrowRight size={14} />
+                  </Link>
+                ) : (
+                  <a
+                    href={service.linkUrl}
+                    className="mt-4 inline-flex self-start items-center gap-1.5 rounded-full bg-[#147BD5] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#106dbd]"
+                  >
+                    {service.linkText}
+                    <ArrowRight size={14} />
+                  </a>
+                )
               ) : null}
             </div>
 
@@ -163,12 +185,21 @@ export default function ServiceOverview({ service }: { service: Service }) {
               </div>
 
               {service.ctaText && service.ctaUrl ? (
-                <a
-                  href={service.ctaUrl}
-                  className="w-full rounded-full bg-[#147BD5] px-4 py-2 text-center text-xs font-semibold text-white transition hover:bg-[#106dbd] shadow-sm"
-                >
-                  {service.ctaText}
-                </a>
+                isInternalPath(service.ctaUrl) ? (
+                  <Link
+                    to={service.ctaUrl}
+                    className="w-full rounded-full bg-[#147BD5] px-4 py-2 text-center text-xs font-semibold text-white transition hover:bg-[#106dbd] shadow-sm"
+                  >
+                    {service.ctaText}
+                  </Link>
+                ) : (
+                  <a
+                    href={service.ctaUrl}
+                    className="w-full rounded-full bg-[#147BD5] px-4 py-2 text-center text-xs font-semibold text-white transition hover:bg-[#106dbd] shadow-sm"
+                  >
+                    {service.ctaText}
+                  </a>
+                )
               ) : null}
             </div>
           </div>

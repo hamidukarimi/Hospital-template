@@ -20,7 +20,7 @@ import {
 
 interface WhyChooseUsItem {
   id: string;
-  icon: string;
+  image?: string | null;
   title: string;
   description: string;
   color: string;
@@ -31,7 +31,7 @@ interface WhyChooseUsItem {
 }
 
 const emptyForm = {
-  icon: "stethoscope",
+  image: "",
   title: "",
   description: "",
   color: "#147BD5",
@@ -97,7 +97,7 @@ const WhyChooseUsPage = () => {
         );
         setEditingId(id);
         setForm({
-          icon: item.icon ?? "stethoscope",
+          image: item.image ?? "",
           title: item.title ?? "",
           description: item.description ?? "",
           color: item.color ?? "#147BD5",
@@ -119,7 +119,7 @@ const WhyChooseUsPage = () => {
     if (!value) return items;
 
     return items.filter((item) =>
-      [item.title, item.description, item.icon].some((field) =>
+      [item.title, item.description, item.image].some((field) =>
         (field ?? "").toLowerCase().includes(value),
       ),
     );
@@ -131,7 +131,7 @@ const WhyChooseUsPage = () => {
 
     try {
       const payload = {
-        icon: form.icon,
+        image: form.image.trim() || null,
         title: form.title.trim(),
         description: form.description.trim(),
         color: form.color,
@@ -224,13 +224,16 @@ const WhyChooseUsPage = () => {
             </label>
 
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">Icon</span>
+              <span className="text-sm font-medium text-slate-700">
+                Image URL
+              </span>
               <input
-                value={form.icon}
+                value={form.image}
                 onChange={(event) =>
-                  setForm({ ...form, icon: event.target.value })
+                  setForm({ ...form, image: event.target.value })
                 }
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="/uploads/why-choose-us/feature.jpg"
               />
             </label>
 

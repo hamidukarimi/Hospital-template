@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Service } from "../../types/api";
 
 export default function ServicePartners({ services }: { services: Service[] }) {
@@ -11,15 +12,15 @@ export default function ServicePartners({ services }: { services: Service[] }) {
         </p>
         <div className="mt-7 grid grid-cols-2 items-center gap-8 opacity-55 sm:grid-cols-3 lg:grid-cols-5">
           {partners.map((partner) => (
-            <a
+            <Link
               key={partner.id}
-              href={`/services/${partner.slug}`}
+              to={`/services/${partner.slug}`}
               className="flex items-center justify-center text-center"
             >
               <div className="text-sm font-semibold leading-tight text-slate-500">
                 {partner.title}
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

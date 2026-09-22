@@ -183,7 +183,7 @@ export interface WhyChooseUsItem {
   id: string;
   title: string;
   description: string;
-  icon: string;
+  image?: string | null;
   color?: string | null;
   linkText?: string | null;
   linkUrl?: string | null;
@@ -195,7 +195,7 @@ export interface LabTest {
   id: string;
   title: string;
   description: string;
-  image?: string | null;
+  icon: string;
   discount?: number | string | null;
   price: number | string;
   buttonText: string;
@@ -283,12 +283,9 @@ export interface FooterColumn {
   links: FooterLink[];
 }
 
+/** Footer navigation container; branding/contact come from SiteSettings. */
 export interface FooterSettings {
   id: string;
-  logo?: string | null;
-  location: string;
-  visitingHours?: string | null;
-  phone: string;
   columns: FooterColumn[];
 }
 

@@ -10,7 +10,6 @@ import ArticlePage from "./admin/pages/articles/ArticlesPage";
 import DoctorPage from "./admin/pages/doctors/DoctorsPage";
 import FooterColumnsPage from "./admin/pages/footer/FooterColumnsPage";
 import FooterLinksPage from "./admin/pages/footer/FooterLinksPage";
-import FooterSettingsPage from "./admin/pages/footer/FooterSettingsPage";
 import NavbarColumnsPage from "./admin/pages/navbar/NavbarColumnsPage";
 import NavbarLinksPage from "./admin/pages/navbar/NavbarLinksPage";
 import HelpCardsPage from "./admin/pages/help-cards/HelpCardsPage";
@@ -76,10 +75,6 @@ function App() {
               <Route
                 path="/admin/social-media/*"
                 element={<SocialMediaPage />}
-              />
-              <Route
-                path="/admin/footer-settings"
-                element={<FooterSettingsPage />}
               />
               <Route
                 path="/admin/footer-columns/*"

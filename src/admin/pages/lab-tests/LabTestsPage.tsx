@@ -1,4 +1,4 @@
-import { Image as ImageIcon, PencilLine, Plus, Trash2 } from "lucide-react";
+import { PencilLine, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AdminButton } from "../../components/AdminButton";
@@ -16,14 +16,14 @@ import {
   adminFormClass,
   adminFormGridClass,
   adminFormPageWrap,
+  formatCurrency,
 } from "../../utils/adminHelpers";
-import { formatCurrency } from "../../utils/adminHelpers";
 
 interface LabTestItem {
   id: string;
   title: string;
   description: string;
-  image?: string | null;
+  icon: string;
   discount?: number | string | null;
   price: number | string;
   buttonText: string;
@@ -33,10 +33,19 @@ interface LabTestItem {
   sortOrder?: number;
 }
 
+const allowedIcons = [
+  "ScanLine",
+  "Activity",
+  "FlaskConical",
+  "Dna",
+  "Stethoscope",
+  "Microscope",
+];
+
 const emptyForm = {
   title: "",
   description: "",
-  image: "",
+  icon: "FlaskConical",
   discount: "",
   price: "",
   buttonText: "",
@@ -100,7 +109,7 @@ const LabTestsPage = () => {
         setForm({
           title: item.title ?? "",
           description: item.description ?? "",
-          image: item.image ?? "",
+          icon: item.icon ?? "FlaskConical",
           discount: item.discount?.toString() ?? "",
           price: item.price?.toString() ?? "",
           buttonText: item.buttonText ?? "",
@@ -136,7 +145,7 @@ const LabTestsPage = () => {
       const payload = {
         title: form.title.trim(),
         description: form.description.trim(),
-        image: form.image.trim(),
+        icon: allowedIcons.includes(form.icon) ? form.icon : "FlaskConical",
         discount: form.discount === "" ? null : Number(form.discount),
         price: Number(form.price),
         buttonText: form.buttonText.trim(),
@@ -308,17 +317,20 @@ const LabTestsPage = () => {
             </label>
 
             <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Image URL
-              </span>
-              <input
-                value={form.image}
+              <span className="text-sm font-medium text-slate-700">Icon</span>
+              <select
+                value={form.icon}
                 onChange={(event) =>
-                  setForm({ ...form, image: event.target.value })
+                  setForm({ ...form, icon: event.target.value })
                 }
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="/uploads/lab-tests/test.jpg"
-              />
+              >
+                {allowedIcons.map((icon) => (
+                  <option key={icon} value={icon}>
+                    {icon}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label className="space-y-2">
@@ -440,8 +452,8 @@ const LabTestsPage = () => {
                   >
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
-                          <ImageIcon className="h-4 w-4" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-slate-600">
+                          {test.icon?.slice(0, 2) || "LT"}
                         </div>
                         <div>
                           <p className="font-semibold text-slate-900">

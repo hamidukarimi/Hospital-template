@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Activity,
   ArrowLeft,
@@ -11,6 +11,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { isInternalPath } from "../lib/color";
 import type { LabTest as LabTestData } from "../types/api";
 
 interface LabTestsSectionProps {
@@ -25,6 +27,22 @@ const iconMap: Record<string, LucideIcon> = {
   Dna,
   Stethoscope,
   Microscope,
+  scanline: ScanLine,
+  activity: Activity,
+  flaskconical: FlaskConical,
+  dna: Dna,
+  stethoscope: Stethoscope,
+  microscope: Microscope,
+};
+
+const resolveIcon = (iconName?: string | null): LucideIcon => {
+  if (!iconName) return Stethoscope;
+  return (
+    iconMap[iconName] ||
+    iconMap[iconName.toLowerCase()] ||
+    iconMap[iconName.replace(/[-_\s]/g, "").toLowerCase()] ||
+    Stethoscope
+  );
 };
 
 const formatPrice = (value: number | string | null | undefined) => {
@@ -49,9 +67,31 @@ const LabTestsSection = ({
   isLoading = false,
 }: LabTestsSectionProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCards, setVisibleCards] = useState(2);
+  const [slideStep, setSlideStep] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const data = labTests.length > 0 ? labTests : [];
-  const visibleCards = 2;
   const maxIndex = Math.max(0, data.length - visibleCards);
+
+  useEffect(() => {
+    const updateLayout = () => {
+      const isMobile = window.matchMedia("(max-width: 639px)").matches;
+      setVisibleCards(isMobile ? 1 : 2);
+
+      const cardWidth = cardRef.current?.offsetWidth ?? 0;
+      const gap = 20;
+      setSlideStep(cardWidth > 0 ? cardWidth + gap : 0);
+    };
+
+    updateLayout();
+    window.addEventListener("resize", updateLayout);
+    return () => window.removeEventListener("resize", updateLayout);
+  }, [data.length]);
+
+  useEffect(() => {
+    setCurrentIndex((current) => Math.min(current, maxIndex));
+  }, [maxIndex]);
 
   const nextSlide = () => {
     setCurrentIndex((current) => (current >= maxIndex ? 0 : current + 1));
@@ -77,7 +117,10 @@ const LabTestsSection = ({
   }
 
   return (
-    <section id="lab-tests" className="relative overflow-hidden bg-[#edf6fb] px-5 py-16 sm:px-8 lg:px-6 lg:py-20">
+    <section
+      id="lab-tests"
+      className="relative overflow-hidden bg-[#edf6fb] px-5 py-16 sm:px-8 lg:px-6 lg:py-20"
+    >
       <div className="mx-auto max-w-[1400px]">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.05fr_1fr]">
           <motion.div
@@ -191,31 +234,33 @@ const LabTestsSection = ({
                 </svg>
               </div>
 
-              <div className="mt-9 overflow-hidden">
+              <div ref={viewportRef} className="mt-9 overflow-hidden">
                 {data.length === 0 ? (
                   <div className="rounded-[17px] border border-dashed border-slate-300 bg-white/45 p-6 text-slate-500">
                     Lab tests are currently unavailable.
                   </div>
                 ) : (
                   <motion.div
-                    className="flex gap-5"
-                    animate={{ x: `-${currentIndex * (50 + 2.2)}%` }}
+                    className="flex items-stretch gap-5"
+                    animate={{ x: -(currentIndex * slideStep) }}
                     transition={{ type: "spring", stiffness: 260, damping: 30 }}
                   >
-                    {data.map((test) => {
-                      const Icon = iconMap[test.title] || Stethoscope;
+                    {data.map((test, index) => {
+                      const Icon = resolveIcon(test.icon);
                       const iconBackground =
                         test.color ||
                         "linear-gradient(135deg, #6424d8 0%, #3d52ed 100%)";
+                      const buttonUrl = test.buttonUrl || "#";
 
                       return (
                         <div
                           key={test.id}
+                          ref={index === 0 ? cardRef : undefined}
                           className="w-full shrink-0 sm:w-[calc(50%-10px)]"
                         >
                           <motion.div
                             whileHover={{ y: -5 }}
-                            className="relative flex min-h-[280px] flex-col rounded-[17px] border border-white/90 bg-white/45 p-4 shadow-[0_12px_30px_rgba(70,130,170,0.15)] backdrop-blur-sm"
+                            className="relative flex h-full min-h-[300px] flex-col rounded-[17px] border border-white/90 bg-white/45 p-4 shadow-[0_12px_30px_rgba(70,130,170,0.15)] backdrop-blur-sm"
                           >
                             <div className="absolute right-3 top-3 rounded-full bg-gradient-to-r from-[#155ee8] to-[#147de2] px-4 py-0.5 shadow-[0_5px_15px_rgba(30,100,220,0.22)]">
                               <span className="text-[13px] font-bold text-white">
@@ -237,7 +282,7 @@ const LabTestsSection = ({
                             <h3 className="mt-4 text-[21px] font-bold tracking-[-0.5px] text-[#071535]">
                               {test.title}
                             </h3>
-                            <p className="mt-2 max-w-[240px] text-[13px] leading-5 text-[#172332]">
+                            <p className="mt-2 flex-1 text-[13px] leading-5 text-[#172332]">
                               {test.description}
                             </p>
 
@@ -248,17 +293,27 @@ const LabTestsSection = ({
                               </span>
                             </p>
 
-                            <motion.a
-                              href={test.buttonUrl || "#"}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                              className="mt-5 flex h-[37px] w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#a84bdf] via-[#7454e8] to-[#2775df] text-[14px] font-semibold text-white shadow-[0_8px_18px_rgba(100,75,220,0.28)] transition-all duration-200 hover:shadow-[0_10px_24px_rgba(100,75,220,0.4)]"
-                            >
-                              <span>
-                                {test.buttonText || "Schedule A Test"}
-                              </span>
-                              <ArrowRight size={17} strokeWidth={2} />
-                            </motion.a>
+                            {isInternalPath(buttonUrl) ? (
+                              <Link
+                                to={buttonUrl}
+                                className="mt-5 flex h-[37px] w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#a84bdf] via-[#7454e8] to-[#2775df] text-[14px] font-semibold text-white shadow-[0_8px_18px_rgba(100,75,220,0.28)] transition-all duration-200 hover:shadow-[0_10px_24px_rgba(100,75,220,0.4)]"
+                              >
+                                <span>
+                                  {test.buttonText || "Schedule A Test"}
+                                </span>
+                                <ArrowRight size={17} strokeWidth={2} />
+                              </Link>
+                            ) : (
+                              <a
+                                href={buttonUrl}
+                                className="mt-5 flex h-[37px] w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#a84bdf] via-[#7454e8] to-[#2775df] text-[14px] font-semibold text-white shadow-[0_8px_18px_rgba(100,75,220,0.28)] transition-all duration-200 hover:shadow-[0_10px_24px_rgba(100,75,220,0.4)]"
+                              >
+                                <span>
+                                  {test.buttonText || "Schedule A Test"}
+                                </span>
+                                <ArrowRight size={17} strokeWidth={2} />
+                              </a>
+                            )}
                           </motion.div>
                         </div>
                       );
@@ -288,7 +343,7 @@ const LabTestsSection = ({
                     type="button"
                     onClick={previousSlide}
                     aria-label="Previous lab test"
-                    className="flex h-9 w-9 items-center justify-center rounded-[9px] border border-[#b6c8d5] cursor-pointer bg-white/70 text-[#071535] shadow-[0_3px_8px_rgba(50,80,100,0.08)] transition-all duration-200 hover:bg-white hover:text-[#4260d7]"
+                    className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[9px] border border-[#b6c8d5] bg-white/70 text-[#071535] shadow-[0_3px_8px_rgba(50,80,100,0.08)] transition-all duration-200 hover:bg-white hover:text-[#4260d7]"
                   >
                     <ArrowLeft size={16} />
                   </button>
@@ -297,7 +352,7 @@ const LabTestsSection = ({
                     type="button"
                     onClick={nextSlide}
                     aria-label="Next lab test"
-                    className="flex h-9 w-9 items-center justify-center rounded-[9px] border border-[#b6c8d5] cursor-pointer bg-white/70 text-[#071535] shadow-[0_3px_8px_rgba(50,80,100,0.08)] transition-all duration-200 hover:bg-white hover:text-[#4260d7]"
+                    className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-[9px] border border-[#b6c8d5] bg-white/70 text-[#071535] shadow-[0_3px_8px_rgba(50,80,100,0.08)] transition-all duration-200 hover:bg-white hover:text-[#4260d7]"
                   >
                     <ArrowRight size={16} />
                   </button>

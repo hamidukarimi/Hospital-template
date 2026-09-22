@@ -1,6 +1,8 @@
 import { ArrowRight, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../lib/api";
+import { isInternalPath } from "../lib/color";
 import type { HeroSection, SiteSettings } from "../types/api";
 
 interface HeroProps {
@@ -80,22 +82,23 @@ const Hero = ({ hero, siteSettings, isLoading = false }: HeroProps) => {
             {displayDescription}
           </motion.p>
 
-          <motion.a
-            href={buttonUrl}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.3,
-              ease: "easeOut",
-            }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-500 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-violet-200/50 transition-colors duration-200 hover:bg-violet-600"
-          >
-            <span>{buttonText}</span>
-            <ArrowRight size={16} strokeWidth={2} />
-          </motion.a>
+          {isInternalPath(buttonUrl) ? (
+            <Link
+              to={buttonUrl}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-500 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-violet-200/50 transition-colors duration-200 hover:scale-[1.04] hover:bg-violet-600"
+            >
+              <span>{buttonText}</span>
+              <ArrowRight size={16} strokeWidth={2} />
+            </Link>
+          ) : (
+            <a
+              href={buttonUrl}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-500 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-violet-200/50 transition-colors duration-200 hover:scale-[1.04] hover:bg-violet-600"
+            >
+              <span>{buttonText}</span>
+              <ArrowRight size={16} strokeWidth={2} />
+            </a>
+          )}
         </div>
       </div>
 
@@ -119,15 +122,22 @@ const Hero = ({ hero, siteSettings, isLoading = false }: HeroProps) => {
           </p>
         </div>
 
-        <motion.a
-          href={siteSettings?.address ? "/contact" : "#"}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-400 text-white transition-colors duration-200 hover:bg-sky-500"
-          aria-label="Find a nearby location"
-        >
-          <MapPin size={17} strokeWidth={2} />
-        </motion.a>
+        {siteSettings?.address ? (
+          <Link
+            to="/contact"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-400 text-white transition-colors duration-200 hover:scale-105 hover:bg-sky-500"
+            aria-label="Find a nearby location"
+          >
+            <MapPin size={17} strokeWidth={2} />
+          </Link>
+        ) : (
+          <span
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-400 text-white"
+            aria-label="Find a nearby location"
+          >
+            <MapPin size={17} strokeWidth={2} />
+          </span>
+        )}
       </motion.div>
 
       <div className="absolute bottom-0 left-0 z-10 h-[38px] w-full rounded-t-[55px] bg-white sm:h-[45px] lg:h-[50px]" />

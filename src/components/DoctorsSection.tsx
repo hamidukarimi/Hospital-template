@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../lib/api";
+import { isInternalPath } from "../lib/color";
 import type { Doctor as DoctorData } from "../types/api";
 
 interface DoctorsSectionProps {
@@ -208,18 +210,31 @@ const DoctorsSection = ({
                           <div className="absolute -left-[22px] bottom-0 h-[22px] w-[22px] rounded-br-[22px] bg-transparent shadow-[8px_8px_0_8px_white]" />
                           <div className="absolute -top-[22px] right-0 h-[22px] w-[22px] rounded-br-[22px] bg-transparent shadow-[8px_8px_0_8px_white]" />
 
-                          <motion.a
-                            href={
+                          {(() => {
+                            const profileUrl =
                               doctor.profileUrl ||
-                              (doctor.slug ? `/doctors/${doctor.slug}` : "#")
-                            }
-                            aria-label={`View ${doctor.name}`}
-                            whileHover={{ scale: 1.08 }}
-                            whileTap={{ scale: 0.94 }}
-                            className="absolute bottom-[8px] right-[8px] flex h-[48px] w-[48px] items-center justify-center rounded-full bg-gradient-to-br from-[#10a6ee] to-[#1676dd] text-white shadow-[0_7px_16px_rgba(20,120,220,0.35)] transition-all duration-300 group-hover:shadow-[0_9px_20px_rgba(20,120,220,0.5)]"
-                          >
-                            <ArrowRight size={21} strokeWidth={2} />
-                          </motion.a>
+                              (doctor.slug ? `/doctors/${doctor.slug}` : "#");
+                            const className =
+                              "absolute bottom-[8px] right-[8px] flex h-[48px] w-[48px] items-center justify-center rounded-full bg-gradient-to-br from-[#10a6ee] to-[#1676dd] text-white shadow-[0_7px_16px_rgba(20,120,220,0.35)] transition-all duration-300 group-hover:shadow-[0_9px_20px_rgba(20,120,220,0.5)] hover:scale-105";
+
+                            return isInternalPath(profileUrl) ? (
+                              <Link
+                                to={profileUrl}
+                                aria-label={`View ${doctor.name}`}
+                                className={className}
+                              >
+                                <ArrowRight size={21} strokeWidth={2} />
+                              </Link>
+                            ) : (
+                              <a
+                                href={profileUrl}
+                                aria-label={`View ${doctor.name}`}
+                                className={className}
+                              >
+                                <ArrowRight size={21} strokeWidth={2} />
+                              </a>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>

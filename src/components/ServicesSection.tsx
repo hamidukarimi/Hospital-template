@@ -1,6 +1,8 @@
 import { ArrowRight, CheckCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../lib/api";
+import { isInternalPath } from "../lib/color";
 import type { Service as ServiceData } from "../types/api";
 
 interface ServicesSectionProps {
@@ -19,11 +21,11 @@ const ServicesSection = ({
       <section className="relative overflow-hidden bg-[#f3f6fa] px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
         <div className="relative mx-auto max-w-[1450px]">
           <div className="mx-auto h-14 w-40 animate-pulse rounded bg-slate-200" />
-          <div className="mt-9 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-9 flex flex-wrap justify-center gap-6">
             {Array.from({ length: 4 }).map((_, index) => (
               <div
                 key={index}
-                className="h-[360px] animate-pulse rounded-[20px] bg-slate-200"
+                className="h-[360px] w-full animate-pulse rounded-[20px] bg-slate-200 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
               />
             ))}
           </div>
@@ -33,7 +35,10 @@ const ServicesSection = ({
   }
 
   return (
-    <section id="services" className="relative overflow-hidden bg-[#f3f6fa] px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+    <section
+      id="services"
+      className="relative overflow-hidden bg-[#f3f6fa] px-5 py-16 sm:px-8 lg:px-10 lg:py-20"
+    >
       <div className="pointer-events-none absolute -left-24 -top-24 h-[260px] w-[260px] rounded-full bg-violet-300/50 blur-[80px]" />
 
       <div className="relative mx-auto max-w-[1450px]">
@@ -55,9 +60,9 @@ const ServicesSection = ({
           </h2>
         </motion.div>
 
-        <div className="mt-9 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-9 flex flex-wrap justify-center gap-6">
           {visibleServices.length === 0 ? (
-            <div className="col-span-full rounded-[20px] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-slate-500">
+            <div className="w-full rounded-[20px] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-slate-500">
               Services are currently unavailable.
             </div>
           ) : (
@@ -65,6 +70,7 @@ const ServicesSection = ({
               const featureList = [service.category, service.linkText].filter(
                 Boolean,
               ) as string[];
+              const linkUrl = service.linkUrl || "#";
 
               return (
                 <motion.article
@@ -73,7 +79,7 @@ const ServicesSection = ({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.55, delay: index * 0.08 }}
-                  className="group"
+                  className="group w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
                 >
                   <div className="relative overflow-hidden rounded-[20px]">
                     <img
@@ -83,15 +89,23 @@ const ServicesSection = ({
                     />
 
                     <div className="absolute bottom-0 right-0 flex h-[58px] w-[72px] items-end justify-end rounded-tl-[32px] bg-[#f3f6fa] pl-3 pt-3">
-                      <motion.a
-                        href={service.linkUrl || "#"}
-                        whileHover={{ scale: 1.08 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:bg-violet-500 hover:text-white"
-                        aria-label={`View ${service.title}`}
-                      >
-                        <ArrowRight size={18} strokeWidth={1.8} />
-                      </motion.a>
+                      {isInternalPath(linkUrl) ? (
+                        <Link
+                          to={linkUrl}
+                          aria-label={`View ${service.title}`}
+                          className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 hover:bg-violet-500 hover:text-white"
+                        >
+                          <ArrowRight size={18} strokeWidth={1.8} />
+                        </Link>
+                      ) : (
+                        <a
+                          href={linkUrl}
+                          aria-label={`View ${service.title}`}
+                          className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 hover:bg-violet-500 hover:text-white"
+                        >
+                          <ArrowRight size={18} strokeWidth={1.8} />
+                        </a>
+                      )}
                     </div>
                   </div>
 
@@ -131,10 +145,8 @@ const ServicesSection = ({
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-10 flex justify-center"
         >
-          <motion.a
-            href="#"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
+          <Link
+            to="/services/details"
             className="group inline-flex items-center gap-2 rounded-full bg-[#55b997] px-7 py-2.5 text-[10px] font-medium text-white shadow-[0_6px_15px_rgba(85,185,151,0.2)] transition-colors duration-200 hover:bg-violet-500"
           >
             <span>View All Services</span>
@@ -143,7 +155,7 @@ const ServicesSection = ({
               strokeWidth={2}
               className="transition-transform duration-200 group-hover:translate-x-1"
             />
-          </motion.a>
+          </Link>
         </motion.div>
       </div>
     </section>

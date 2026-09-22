@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Clock3, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../lib/api";
+import { isInternalPath } from "../lib/color";
 import type { FooterSettings, SiteSettings } from "../types/api";
 
 interface FooterProps {
@@ -20,18 +22,23 @@ const Footer = ({ footer, siteSettings, isLoading = false }: FooterProps) => {
   const columns = footer?.columns ?? [];
   const socialLinks =
     siteSettings?.socialMedia?.filter((item) => item.isActive) ?? [];
-  const logoSrc =
-    getImageUrl(siteSettings?.logo || footer?.logo) || "./h-logo.svg";
+  const logoSrc = getImageUrl(siteSettings?.logo) || "./h-logo.svg";
   const hospitalName = siteSettings?.hospitalName || "Ali Hospital";
   const location =
-    footer?.location ||
     siteSettings?.address ||
     "485 Bayshore Blvd. Ste 154, San Francisco, CA 95124";
-  const visitingHours =
-    footer?.visitingHours ||
-    siteSettings?.mondayFridayVisitingHours ||
+  const visitingHours = [
+    siteSettings?.sundayVisitingHours
+      ? `Sunday: ${siteSettings.sundayVisitingHours}`
+      : null,
+    siteSettings?.mondayFridayVisitingHours
+      ? `Monday - Friday: ${siteSettings.mondayFridayVisitingHours}`
+      : null,
+  ]
+    .filter(Boolean)
+    .join("\n") ||
     "Sunday: 08:00 AM - 10:00 PM\nMonday - Friday: 06:00 AM - 12:00 AM";
-  const phone = footer?.phone || siteSettings?.phone || "+011 3253 4567";
+  const phone = siteSettings?.phone || "+011 3253 4567";
 
   if (isLoading) {
     return (
@@ -137,13 +144,13 @@ const Footer = ({ footer, siteSettings, isLoading = false }: FooterProps) => {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-7">
-              <a
-                href="/"
+              <Link
+                to="/"
                 aria-label={`${hospitalName} home`}
                 className="inline-block"
               >
                 <img src={logoSrc} alt={hospitalName} className="w-25" />
-              </a>
+              </Link>
             </div>
 
             <div className="mb-5 flex gap-3">
@@ -203,16 +210,28 @@ const Footer = ({ footer, siteSettings, isLoading = false }: FooterProps) => {
                         No links available
                       </li>
                     ) : (
-                      column.links.map((link) => (
-                        <li key={link.id}>
-                          <a
-                            href={link.url || "#"}
-                            className="text-[14px] text-white/90 transition-colors duration-200 hover:text-[#12dff5]"
-                          >
-                            {link.label}
-                          </a>
-                        </li>
-                      ))
+                      column.links.map((link) => {
+                        const url = link.url || "#";
+                        return (
+                          <li key={link.id}>
+                            {isInternalPath(url) ? (
+                              <Link
+                                to={url}
+                                className="text-[14px] text-white/90 transition-colors duration-200 hover:text-[#12dff5]"
+                              >
+                                {link.label}
+                              </Link>
+                            ) : (
+                              <a
+                                href={url}
+                                className="text-[14px] text-white/90 transition-colors duration-200 hover:text-[#12dff5]"
+                              >
+                                {link.label}
+                              </a>
+                            )}
+                          </li>
+                        );
+                      })
                     )}
                   </ul>
 

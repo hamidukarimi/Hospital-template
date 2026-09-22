@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, CalendarDays, Clock3 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../lib/api";
 import type { Article as ArticleData } from "../types/api";
 
@@ -7,6 +9,8 @@ interface ArticlesSectionProps {
   articles?: ArticleData[];
   isLoading?: boolean;
 }
+
+const INITIAL_VISIBLE = 6;
 
 const formatDate = (value?: string | Date | null) => {
   if (!value) return "Recently";
@@ -25,7 +29,13 @@ const ArticlesSection = ({
   articles = [],
   isLoading = false,
 }: ArticlesSectionProps) => {
-  const visibleArticles = articles.length > 0 ? articles : [];
+  const [expanded, setExpanded] = useState(false);
+  const allArticles = articles.length > 0 ? articles : [];
+  const visibleArticles =
+    expanded || allArticles.length <= INITIAL_VISIBLE
+      ? allArticles
+      : allArticles.slice(0, INITIAL_VISIBLE);
+  const canToggle = allArticles.length > INITIAL_VISIBLE;
 
   if (isLoading) {
     return (
@@ -46,7 +56,10 @@ const ArticlesSection = ({
   }
 
   return (
-    <section id="articles" className="relative overflow-hidden bg-gradient-to-br from-[#edf5ff] via-[#f4f6fc] to-[#e9f9fc] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+    <section
+      id="articles"
+      className="relative overflow-hidden bg-gradient-to-br from-[#edf5ff] via-[#f4f6fc] to-[#e9f9fc] px-5 py-16 sm:px-8 lg:px-12 lg:py-20"
+    >
       <div className="pointer-events-none absolute -left-28 -top-20 h-64 w-[430px] rotate-[-10deg] rounded-[50%] border-[28px] border-white/50 blur-[1px]" />
       <div className="pointer-events-none absolute -left-36 top-14 h-48 w-[390px] rotate-[8deg] rounded-[50%] border-[18px] border-[#dceaf7]/70" />
       <div className="pointer-events-none absolute right-12 top-12 hidden h-28 w-36 opacity-45 sm:block">
@@ -105,7 +118,7 @@ const ArticlesSection = ({
         </motion.div>
 
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {visibleArticles.length === 0 ? (
+          {allArticles.length === 0 ? (
             <div className="col-span-full rounded-[17px] border border-dashed border-slate-300 bg-white/60 p-8 text-center text-slate-500">
               Articles are currently unavailable.
             </div>
@@ -151,41 +164,36 @@ const ArticlesSection = ({
                   {article.title}
                 </h3>
 
-                <motion.a
-                  href={article.slug ? `/articles/${article.slug}` : "#"}
-                  whileHover={{ x: 4 }}
-                  className="mt-4 inline-flex items-center gap-2 text-[14px] font-medium text-[#17619f]"
-                >
-                  Read More
-                  <ArrowRight size={17} strokeWidth={1.8} />
-                </motion.a>
+                {article.slug ? (
+                  <Link
+                    to={`/articles/${article.slug}`}
+                    className="mt-4 inline-flex items-center gap-2 text-[14px] font-medium text-[#17619f] transition-transform hover:translate-x-1"
+                  >
+                    Read More
+                    <ArrowRight size={17} strokeWidth={1.8} />
+                  </Link>
+                ) : (
+                  <span className="mt-4 inline-flex items-center gap-2 text-[14px] font-medium text-[#17619f]/60">
+                    Read More
+                    <ArrowRight size={17} strokeWidth={1.8} />
+                  </span>
+                )}
               </motion.article>
             ))
           )}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="relative mt-10 overflow-hidden rounded-full border border-white/80 bg-gradient-to-r from-[#fffdf8] via-[#f4f7fc] to-[#eaf5ff] px-6 py-4 shadow-[0_10px_25px_rgba(50,80,110,0.14)] sm:px-8"
-        >
-          <div className="pointer-events-none absolute -left-8 top-1/2 h-24 w-24 -translate-y-1/2 rounded-full bg-[#f8dfca]/70 blur-2xl" />
-          <div className="relative flex flex-col items-center justify-center gap-2 text-center sm:flex-row">
-            <p className="text-[13px] text-[#263447] sm:text-[14px]">
-              We have {Math.max(visibleArticles.length, 0)} Articles.
-            </p>
-            <motion.a
-              href="#"
-              whileHover={{ x: 3 }}
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#185b9c] underline decoration-[#185b9c]/50 underline-offset-4 sm:text-[14px]"
+        {canToggle && (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setExpanded((current) => !current)}
+              className="inline-flex items-center gap-2 rounded-full border border-[#b7c9d8] bg-white px-6 py-2.5 text-[13px] font-medium text-[#071535] transition-colors hover:border-[#185b9c] hover:text-[#185b9c]"
             >
-              View All
-              <ArrowRight size={16} strokeWidth={1.8} />
-            </motion.a>
+              {expanded ? "See less" : "See more"}
+            </button>
           </div>
-        </motion.div>
+        )}
       </div>
     </section>
   );
