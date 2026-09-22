@@ -3,6 +3,7 @@ import type {
   AboutSection,
   Article,
   Doctor,
+  Faq,
   FooterSettings,
   HeroSection,
   HelpSection,
@@ -146,6 +147,8 @@ export const getArticles = () => request<Article[]>("/articles");
 
 export const getArticleBySlug = (slug: string) =>
   request<Article>(`/articles/${encodeURIComponent(slug)}`);
+
+export const getFaqs = () => request<Faq[]>("/faqs");
 
 export const getFooter = () => request<FooterSettings>("/footer");
 

@@ -27,6 +27,7 @@ const menuGroups = [
       { to: "/admin/services", label: "Services", icon: adminIconMap.service },
       { to: "/admin/doctors", label: "Doctors", icon: adminIconMap.doctor },
       { to: "/admin/articles", label: "Articles", icon: adminIconMap.article },
+      { to: "/admin/faqs", label: "FAQs", icon: adminIconMap.faq },
       {
         to: "/admin/testimonials",
         label: "Testimonials",

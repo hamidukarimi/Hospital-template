@@ -25,6 +25,8 @@ import ContactPage from "./pages/ContactPage"; // <-- 1. Import ContactPage
 import AboutPage from "./pages/AboutPage";
 import DoctorProfilePage from "./pages/doctors/DoctorProfilePage";
 import ArticleDetailPage from "./pages/articles/ArticleDetailPage";
+import FaqPage from "./pages/FaqPage";
+import FaqsAdminPage from "./admin/pages/faqs/FaqsPage";
 
 function App() {
   return (
@@ -34,6 +36,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<ContactPage />} /> {/* <-- 2. Add Route */}
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/faq" element={<FaqPage />} />
           <Route
   path="/doctors/:doctorSlug"
   element={<DoctorProfilePage />}
@@ -52,6 +55,7 @@ function App() {
               <Route path="/admin/services/*" element={<ServicePage />} />
               <Route path="/admin/doctors/*" element={<DoctorPage />} />
               <Route path="/admin/articles/*" element={<ArticlePage />} />
+              <Route path="/admin/faqs/*" element={<FaqsAdminPage />} />
               <Route
                 path="/admin/testimonials/*"
                 element={<TestimonialPage />}

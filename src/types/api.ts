@@ -258,6 +258,15 @@ export interface Article {
   sortOrder: number;
 }
 
+export interface Faq {
+  id: string;
+  question: string;
+  answer: string;
+  category?: string | null;
+  sortOrder: number;
+  isActive: boolean;
+}
+
 export interface FooterLink {
   id: string;
   label: string;
