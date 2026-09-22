@@ -144,6 +144,9 @@ export const getDoctorBySlug = (slug: string) =>
 
 export const getArticles = () => request<Article[]>("/articles");
 
+export const getArticleBySlug = (slug: string) =>
+  request<Article>(`/articles/${encodeURIComponent(slug)}`);
+
 export const getFooter = () => request<FooterSettings>("/footer");
 
 export interface ContactSubmissionPayload {

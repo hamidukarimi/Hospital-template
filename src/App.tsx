@@ -24,6 +24,7 @@ import ServiceDetailsPage from "./pages/ServiceDetailsPage";
 import ContactPage from "./pages/ContactPage"; // <-- 1. Import ContactPage
 import AboutPage from "./pages/AboutPage";
 import DoctorProfilePage from "./pages/doctors/DoctorProfilePage";
+import ArticleDetailPage from "./pages/articles/ArticleDetailPage";
 
 function App() {
   return (
@@ -37,6 +38,10 @@ function App() {
   path="/doctors/:doctorSlug"
   element={<DoctorProfilePage />}
 />
+          <Route
+            path="/articles/:articleSlug"
+            element={<ArticleDetailPage />}
+          />
 
           <Route path="/admin/login" element={<AdminLogin />} />
 
