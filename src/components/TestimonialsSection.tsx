@@ -51,7 +51,7 @@ const TestimonialsSection = ({
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#f9f9f8] px-5 py-20 sm:px-8 lg:px-12 lg:py-24">
+    <section id="testimonials" className="relative overflow-hidden bg-[#f9f9f8] px-5 py-20 sm:px-8 lg:px-12 lg:py-24">
       <div className="pointer-events-none absolute right-[10%] top-[160px] hidden h-[130px] w-[130px] rotate-[-20deg] lg:block">
         <img src="./md-icon.png" alt="Decorative shape" />
       </div>

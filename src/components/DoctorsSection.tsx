@@ -84,7 +84,7 @@ const DoctorsSection = ({
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#e9f8ff] via-[#f2f8ff] to-[#f2efff] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+    <section id="doctors" className="relative overflow-hidden bg-gradient-to-br from-[#e9f8ff] via-[#f2f8ff] to-[#f2efff] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
       <div className="pointer-events-none absolute -left-24 -top-24 h-56 w-56 rounded-full border-[28px] border-[#d6ecfa] opacity-80" />
       <div className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-white/70" />
       <div className="pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full border-[25px] border-[#d9eef7] opacity-70" />

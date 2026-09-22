@@ -50,7 +50,7 @@ const AboutSection = ({
   }
 
   return (
-    <section className="bg-white px-6 py-16 sm:px-10 lg:px-16 lg:py-20">
+    <section id="about" className="bg-white px-6 py-16 sm:px-10 lg:px-16 lg:py-20">
       <div className="mx-auto grid max-w-[1100px] items-center gap-10 lg:grid-cols-[42%_58%] lg:gap-12">
         <motion.div
           initial={{ opacity: 0, x: -30 }}

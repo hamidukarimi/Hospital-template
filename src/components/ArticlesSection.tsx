@@ -46,7 +46,7 @@ const ArticlesSection = ({
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#edf5ff] via-[#f4f6fc] to-[#e9f9fc] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
+    <section id="articles" className="relative overflow-hidden bg-gradient-to-br from-[#edf5ff] via-[#f4f6fc] to-[#e9f9fc] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
       <div className="pointer-events-none absolute -left-28 -top-20 h-64 w-[430px] rotate-[-10deg] rounded-[50%] border-[28px] border-white/50 blur-[1px]" />
       <div className="pointer-events-none absolute -left-36 top-14 h-48 w-[390px] rotate-[8deg] rounded-[50%] border-[18px] border-[#dceaf7]/70" />
       <div className="pointer-events-none absolute right-12 top-12 hidden h-28 w-36 opacity-45 sm:block">

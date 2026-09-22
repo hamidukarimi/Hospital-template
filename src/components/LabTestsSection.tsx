@@ -77,7 +77,7 @@ const LabTestsSection = ({
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#edf6fb] px-5 py-16 sm:px-8 lg:px-6 lg:py-20">
+    <section id="lab-tests" className="relative overflow-hidden bg-[#edf6fb] px-5 py-16 sm:px-8 lg:px-6 lg:py-20">
       <div className="mx-auto max-w-[1400px]">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.05fr_1fr]">
           <motion.div

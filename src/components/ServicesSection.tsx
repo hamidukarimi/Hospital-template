@@ -33,7 +33,7 @@ const ServicesSection = ({
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#f3f6fa] px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+    <section id="services" className="relative overflow-hidden bg-[#f3f6fa] px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
       <div className="pointer-events-none absolute -left-24 -top-24 h-[260px] w-[260px] rounded-full bg-violet-300/50 blur-[80px]" />
 
       <div className="relative mx-auto max-w-[1450px]">
