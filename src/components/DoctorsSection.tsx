@@ -209,7 +209,10 @@ const DoctorsSection = ({
                           <div className="absolute -top-[22px] right-0 h-[22px] w-[22px] rounded-br-[22px] bg-transparent shadow-[8px_8px_0_8px_white]" />
 
                           <motion.a
-                            href={doctor.profileUrl || "#"}
+                            href={
+                              doctor.profileUrl ||
+                              (doctor.slug ? `/doctors/${doctor.slug}` : "#")
+                            }
                             aria-label={`View ${doctor.name}`}
                             whileHover={{ scale: 1.08 }}
                             whileTap={{ scale: 0.94 }}

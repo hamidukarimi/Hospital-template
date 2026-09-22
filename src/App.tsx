@@ -23,6 +23,7 @@ import WhyChooseUsPage from "./admin/pages/why-choose-us/WhyChooseUsPage";
 import ServiceDetailsPage from "./pages/ServiceDetailsPage";
 import ContactPage from "./pages/ContactPage"; // <-- 1. Import ContactPage
 import AboutPage from "./pages/AboutPage";
+import DoctorProfilePage from "./pages/doctors/DoctorProfilePage";
 
 function App() {
   return (
@@ -32,6 +33,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<ContactPage />} /> {/* <-- 2. Add Route */}
           <Route path="/about" element={<AboutPage />} />
+          <Route
+  path="/doctors/:doctorSlug"
+  element={<DoctorProfilePage />}
+/>
 
           <Route path="/admin/login" element={<AdminLogin />} />
 

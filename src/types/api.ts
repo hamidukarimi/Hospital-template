@@ -205,14 +205,40 @@ export interface LabTest {
   sortOrder: number;
 }
 
+export interface DoctorSpecialtyItem {
+  label: string;
+  icon?: string | null;
+  className?: string | null;
+}
+
+export interface DoctorEducationItem {
+  year: string;
+  title: string;
+  institution: string;
+}
+
+export interface DoctorAchievementItem {
+  label: string;
+  icon?: string | null;
+}
+
 export interface Doctor {
   id: string;
   name: string;
+  slug: string;
   specialty: string;
+  credentials?: string | null;
   description?: string | null;
   image?: string | null;
   profileUrl?: string | null;
   category?: string | null;
+  yearsExperience?: string | null;
+  patientsTreated?: string | null;
+  rating?: string | null;
+  overviewTitle?: string | null;
+  specialties?: DoctorSpecialtyItem[] | null;
+  education?: DoctorEducationItem[] | null;
+  achievements?: DoctorAchievementItem[] | null;
   isActive: boolean;
   sortOrder: number;
 }

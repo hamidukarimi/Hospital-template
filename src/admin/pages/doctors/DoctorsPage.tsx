@@ -22,22 +22,40 @@ import { getImageUrl } from "../../utils/adminHelpers";
 interface DoctorItem {
   id: string;
   name: string;
+  slug?: string | null;
   specialty: string;
+  credentials?: string | null;
   description?: string | null;
   image?: string | null;
   profileUrl?: string | null;
   category?: string | null;
+  yearsExperience?: string | null;
+  patientsTreated?: string | null;
+  rating?: string | null;
+  overviewTitle?: string | null;
+  specialties?: unknown[];
+  education?: unknown[];
+  achievements?: unknown[];
   isActive?: boolean;
   sortOrder?: number;
 }
 
 const emptyForm = {
   name: "",
+  slug: "",
   specialty: "",
+  credentials: "",
   description: "",
   image: "",
   profileUrl: "",
   category: "",
+  yearsExperience: "",
+  patientsTreated: "",
+  rating: "",
+  overviewTitle: "",
+  specialtiesJson: "[]",
+  educationJson: "[]",
+  achievementsJson: "[]",
   isActive: true,
   sortOrder: 0,
 };
@@ -98,11 +116,20 @@ const DoctorsPage = () => {
         setEditingId(id);
         setForm({
           name: item.name ?? "",
+          slug: item.slug ?? "",
           specialty: item.specialty ?? "",
+          credentials: item.credentials ?? "",
           description: item.description ?? "",
           image: item.image ?? "",
           profileUrl: item.profileUrl ?? "",
           category: item.category ?? "",
+          yearsExperience: item.yearsExperience ?? "",
+          patientsTreated: item.patientsTreated ?? "",
+          rating: item.rating ?? "",
+          overviewTitle: item.overviewTitle ?? "",
+          specialtiesJson: JSON.stringify(item.specialties ?? [], null, 2),
+          educationJson: JSON.stringify(item.education ?? [], null, 2),
+          achievementsJson: JSON.stringify(item.achievements ?? [], null, 2),
           isActive: item.isActive ?? true,
           sortOrder: item.sortOrder ?? 0,
         });
@@ -119,7 +146,7 @@ const DoctorsPage = () => {
     if (!value) return items;
 
     return items.filter((item) =>
-      [item.name, item.specialty, item.category].some((field) =>
+      [item.name, item.specialty, item.category, item.slug].some((field) =>
         (field ?? "").toLowerCase().includes(value),
       ),
     );
@@ -130,22 +157,49 @@ const DoctorsPage = () => {
     setSaving(true);
 
     try {
+      let specialties: unknown[] = [];
+      let education: unknown[] = [];
+      let achievements: unknown[] = [];
+
+      try {
+        specialties = JSON.parse(form.specialtiesJson || "[]");
+        education = JSON.parse(form.educationJson || "[]");
+        achievements = JSON.parse(form.achievementsJson || "[]");
+      } catch {
+        pushToast({
+          type: "error",
+          title: "Invalid JSON",
+          description:
+            "Specialties, education, or achievements JSON is invalid.",
+        });
+        return;
+      }
+
       const payload = {
         name: form.name.trim(),
+        slug: form.slug.trim() || undefined,
         specialty: form.specialty.trim(),
-        description: form.description.trim(),
-        image: form.image.trim(),
+        credentials: form.credentials.trim() || null,
+        description: form.description.trim() || null,
+        image: form.image.trim() || null,
         profileUrl: form.profileUrl.trim() || null,
         category: form.category.trim() || null,
+        yearsExperience: form.yearsExperience.trim() || null,
+        patientsTreated: form.patientsTreated.trim() || null,
+        rating: form.rating.trim() || null,
+        overviewTitle: form.overviewTitle.trim() || null,
+        specialties,
+        education,
+        achievements,
         isActive: form.isActive,
         sortOrder: Number(form.sortOrder) || 0,
       };
 
-      if (!payload.name || !payload.specialty || !payload.description) {
+      if (!payload.name || !payload.specialty) {
         pushToast({
           type: "error",
           title: "Missing required fields",
-          description: "Name, specialty, and description are required.",
+          description: "Name and specialty are required.",
         });
         return;
       }
@@ -224,6 +278,18 @@ const DoctorsPage = () => {
             </label>
 
             <label className="space-y-2">
+              <span className="text-sm font-medium text-slate-700">Slug</span>
+              <input
+                value={form.slug}
+                onChange={(event) =>
+                  setForm({ ...form, slug: event.target.value })
+                }
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="ahmad-kha"
+              />
+            </label>
+
+            <label className="space-y-2">
               <span className="text-sm font-medium text-slate-700">
                 Specialty
               </span>
@@ -237,9 +303,37 @@ const DoctorsPage = () => {
               />
             </label>
 
+            <label className="space-y-2">
+              <span className="text-sm font-medium text-slate-700">
+                Credentials
+              </span>
+              <input
+                value={form.credentials}
+                onChange={(event) =>
+                  setForm({ ...form, credentials: event.target.value })
+                }
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="MD, FACP"
+              />
+            </label>
+
             <label className="space-y-2 md:col-span-2">
               <span className="text-sm font-medium text-slate-700">
-                Description
+                Overview title
+              </span>
+              <input
+                value={form.overviewTitle}
+                onChange={(event) =>
+                  setForm({ ...form, overviewTitle: event.target.value })
+                }
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="About Dr. Ahmad Kha"
+              />
+            </label>
+
+            <label className="space-y-2 md:col-span-2">
+              <span className="text-sm font-medium text-slate-700">
+                Description / Overview
               </span>
               <textarea
                 value={form.description}
@@ -248,7 +342,46 @@ const DoctorsPage = () => {
                 }
                 rows={4}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                required
+              />
+            </label>
+
+            <label className="space-y-2">
+              <span className="text-sm font-medium text-slate-700">
+                Years experience
+              </span>
+              <input
+                value={form.yearsExperience}
+                onChange={(event) =>
+                  setForm({ ...form, yearsExperience: event.target.value })
+                }
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="15+"
+              />
+            </label>
+
+            <label className="space-y-2">
+              <span className="text-sm font-medium text-slate-700">
+                Patients treated
+              </span>
+              <input
+                value={form.patientsTreated}
+                onChange={(event) =>
+                  setForm({ ...form, patientsTreated: event.target.value })
+                }
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="10K+"
+              />
+            </label>
+
+            <label className="space-y-2">
+              <span className="text-sm font-medium text-slate-700">Rating</span>
+              <input
+                value={form.rating}
+                onChange={(event) =>
+                  setForm({ ...form, rating: event.target.value })
+                }
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="4.9/5"
               />
             </label>
 
@@ -303,6 +436,52 @@ const DoctorsPage = () => {
                   setForm({ ...form, profileUrl: event.target.value })
                 }
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                placeholder="/doctors/ahmad-kha"
+              />
+            </label>
+
+            <label className="space-y-2 md:col-span-2">
+              <span className="text-sm font-medium text-slate-700">
+                Specialties JSON
+              </span>
+              <textarea
+                value={form.specialtiesJson}
+                onChange={(event) =>
+                  setForm({ ...form, specialtiesJson: event.target.value })
+                }
+                rows={6}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
+                placeholder='[{ "label": "Cardiology", "icon": "Heart", "className": "bg-pink-50 text-pink-700 border-pink-200" }]'
+              />
+            </label>
+
+            <label className="space-y-2 md:col-span-2">
+              <span className="text-sm font-medium text-slate-700">
+                Education JSON
+              </span>
+              <textarea
+                value={form.educationJson}
+                onChange={(event) =>
+                  setForm({ ...form, educationJson: event.target.value })
+                }
+                rows={6}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
+                placeholder='[{ "year": "2020", "title": "MD", "institution": "Johns Hopkins University" }]'
+              />
+            </label>
+
+            <label className="space-y-2 md:col-span-2">
+              <span className="text-sm font-medium text-slate-700">
+                Achievements JSON
+              </span>
+              <textarea
+                value={form.achievementsJson}
+                onChange={(event) =>
+                  setForm({ ...form, achievementsJson: event.target.value })
+                }
+                rows={5}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
+                placeholder='[{ "label": "Top Doctor Award (2023)", "icon": "Award" }]'
               />
             </label>
 
@@ -406,7 +585,7 @@ const DoctorsPage = () => {
                             {doctor.name}
                           </p>
                           <p className="text-xs text-slate-500">
-                            {doctor.category || "General"}
+                            {doctor.slug || doctor.category || "General"}
                           </p>
                         </div>
                       </div>

@@ -139,6 +139,9 @@ export const getLabTests = () => request<LabTest[]>("/lab-tests");
 
 export const getDoctors = () => request<Doctor[]>("/doctors");
 
+export const getDoctorBySlug = (slug: string) =>
+  request<Doctor>(`/doctors/${encodeURIComponent(slug)}`);
+
 export const getArticles = () => request<Article[]>("/articles");
 
 export const getFooter = () => request<FooterSettings>("/footer");

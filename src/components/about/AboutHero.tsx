@@ -5,9 +5,53 @@ import type { About } from "../../types/api";
 
 interface AboutHeroProps {
   about?: About | null;
+  isLoading?: boolean;
 }
 
-export default function AboutHero({ about }: AboutHeroProps) {
+export default function AboutHero({
+  about,
+  isLoading = false,
+}: AboutHeroProps) {
+  if (isLoading) {
+    return (
+      <section className="relative overflow-hidden bg-slate-900 py-16 lg:py-24 text-white">
+        <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-teal-500/15 blur-3xl" />
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-12 animate-pulse">
+            <div className="lg:col-span-7 space-y-6">
+              <div className="h-8 w-52 rounded-full bg-slate-800" />
+
+              <div className="space-y-3">
+                <div className="h-10 w-full max-w-xl rounded-lg bg-slate-800 sm:h-12" />
+                <div className="h-10 w-4/5 max-w-lg rounded-lg bg-slate-800 sm:h-12" />
+              </div>
+
+              <div className="space-y-2 max-w-2xl">
+                <div className="h-4 w-full rounded bg-slate-800" />
+                <div className="h-4 w-11/12 rounded bg-slate-800" />
+                <div className="h-4 w-4/5 rounded bg-slate-800" />
+              </div>
+
+              <div className="pt-2">
+                <div className="h-12 w-36 rounded-full bg-slate-800" />
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-lg lg:max-w-none overflow-hidden rounded-3xl border border-slate-700/50 shadow-2xl shadow-blue-950/50 h-[420px] sm:h-[480px] lg:h-[520px] bg-slate-800">
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="h-4 w-48 rounded bg-slate-700" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const badge = about?.heroBadge || "Pioneering Modern Healthcare";
   const title = about?.heroTitle || "Combining Advanced Technology with";
   const highlight =

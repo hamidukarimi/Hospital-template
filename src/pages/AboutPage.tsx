@@ -42,7 +42,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-slate-50/50">
       <Navbar siteSettings={settings} isLoading={loading} />
       <main>
-        <AboutHero about={about} />
+        <AboutHero about={about} isLoading={loading} />
         <AboutMissionVision about={about} />
         <AboutStats about={about} />
         <AboutMilestones about={about} />
