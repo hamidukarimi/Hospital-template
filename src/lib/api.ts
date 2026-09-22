@@ -8,6 +8,7 @@ import type {
   HeroSection,
   HelpSection,
   LabTest,
+  NavbarColumn,
   Service,
   SiteSettings,
   Testimonial,
@@ -151,6 +152,8 @@ export const getArticleBySlug = (slug: string) =>
 export const getFaqs = () => request<Faq[]>("/faqs");
 
 export const getFooter = () => request<FooterSettings>("/footer");
+
+export const getNavbar = () => request<NavbarColumn[]>("/navbar");
 
 export interface ContactSubmissionPayload {
   name: string;

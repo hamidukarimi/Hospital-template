@@ -11,6 +11,8 @@ import DoctorPage from "./admin/pages/doctors/DoctorsPage";
 import FooterColumnsPage from "./admin/pages/footer/FooterColumnsPage";
 import FooterLinksPage from "./admin/pages/footer/FooterLinksPage";
 import FooterSettingsPage from "./admin/pages/footer/FooterSettingsPage";
+import NavbarColumnsPage from "./admin/pages/navbar/NavbarColumnsPage";
+import NavbarLinksPage from "./admin/pages/navbar/NavbarLinksPage";
 import HelpCardsPage from "./admin/pages/help-cards/HelpCardsPage";
 import LabTestsPage from "./admin/pages/lab-tests/LabTestsPage";
 import ServicePage from "./admin/pages/services/ServicesPage";
@@ -86,6 +88,14 @@ function App() {
               <Route
                 path="/admin/footer-links/*"
                 element={<FooterLinksPage />}
+              />
+              <Route
+                path="/admin/navbar-columns/*"
+                element={<NavbarColumnsPage />}
+              />
+              <Route
+                path="/admin/navbar-links/*"
+                element={<NavbarLinksPage />}
               />
             </Route>
           </Route>

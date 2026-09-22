@@ -13,12 +13,18 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { getFaqs, getFooter, getSiteSettings } from "../lib/api";
-import type { Faq, FooterSettings, SiteSettings } from "../types/api";
+import { getFaqs, getFooter, getNavbar, getSiteSettings } from "../lib/api";
+import type {
+  Faq,
+  FooterSettings,
+  NavbarColumn,
+  SiteSettings,
+} from "../types/api";
 
 export default function FaqPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [loading, setLoading] = useState(true);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -28,11 +34,12 @@ export default function FaqPage() {
     let active = true;
     setLoading(true);
 
-    Promise.all([getSiteSettings(), getFooter(), getFaqs()])
-      .then(([settingsData, footerData, faqsData]) => {
+    Promise.all([getSiteSettings(), getFooter(), getNavbar(), getFaqs()])
+      .then(([settingsData, footerData, navbarData, faqsData]) => {
         if (!active) return;
         setSettings(settingsData);
         setFooter(footerData);
+        setNavbarColumns(navbarData ?? []);
         setFaqs(faqsData ?? []);
       })
       .catch((err) => {
@@ -69,7 +76,11 @@ export default function FaqPage() {
 
   return (
     <div className="min-h-screen bg-slate-50/50">
-      <Navbar siteSettings={settings} isLoading={loading} />
+      <Navbar
+        siteSettings={settings}
+        columns={navbarColumns}
+        isLoading={loading}
+      />
       <main>
         {loading ? (
           <FaqPageSkeleton />

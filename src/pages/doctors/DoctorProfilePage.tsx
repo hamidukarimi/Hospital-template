@@ -6,14 +6,25 @@ import DoctorExpertiseCard from "../../components/doctor-profile/DoctorExpertise
 import DoctorExperienceCard from "../../components/doctor-profile/DoctorExperienceCard";
 import DoctorOverviewCard from "../../components/doctor-profile/DoctorOverviewCard";
 import DoctorProfileCard from "../../components/doctor-profile/DoctorProfileCard";
-import { getDoctorBySlug, getFooter, getSiteSettings } from "../../lib/api";
-import type { Doctor, FooterSettings, SiteSettings } from "../../types/api";
+import {
+  getDoctorBySlug,
+  getFooter,
+  getNavbar,
+  getSiteSettings,
+} from "../../lib/api";
+import type {
+  Doctor,
+  FooterSettings,
+  NavbarColumn,
+  SiteSettings,
+} from "../../types/api";
 
 export default function DoctorProfilePage() {
   const { doctorSlug } = useParams();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -28,12 +39,14 @@ export default function DoctorProfilePage() {
       getDoctorBySlug(doctorSlug),
       getSiteSettings(),
       getFooter(),
+      getNavbar(),
     ])
-      .then(([doctorData, settingsData, footerData]) => {
+      .then(([doctorData, settingsData, footerData, navbarData]) => {
         if (!active) return;
         setDoctor(doctorData);
         setSiteSettings(settingsData);
         setFooter(footerData);
+        setNavbarColumns(navbarData ?? []);
         setError(!doctorData);
       })
       .catch(() => {
@@ -52,7 +65,11 @@ export default function DoctorProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-cyan-50">
-      <Navbar siteSettings={siteSettings} isLoading={loading} />
+      <Navbar
+        siteSettings={siteSettings}
+        columns={navbarColumns}
+        isLoading={loading}
+      />
       <main>
         <div className="mx-auto max-w-7xl px-5 py-12 mt-10 sm:px-8 lg:px-10 lg:py-16">
           <div className="mb-8">

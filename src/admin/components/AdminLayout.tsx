@@ -75,6 +75,16 @@ const menuGroups = [
         label: "Footer Links",
         icon: adminIconMap.link,
       },
+      {
+        to: "/admin/navbar-columns",
+        label: "Navbar Columns",
+        icon: adminIconMap.article,
+      },
+      {
+        to: "/admin/navbar-links",
+        label: "Navbar Links",
+        icon: adminIconMap.link,
+      },
     ],
   },
   {

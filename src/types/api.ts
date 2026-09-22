@@ -291,3 +291,21 @@ export interface FooterSettings {
   phone: string;
   columns: FooterColumn[];
 }
+
+export interface NavbarLink {
+  id: string;
+  label: string;
+  url: string;
+  sortOrder: number;
+  isActive: boolean;
+  navigationItemId?: string;
+}
+
+export interface NavbarColumn {
+  id: string;
+  label: string;
+  url: string;
+  sortOrder: number;
+  isActive: boolean;
+  dropdownItems: NavbarLink[];
+}

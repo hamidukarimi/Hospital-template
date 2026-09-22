@@ -14,9 +14,15 @@ import {
   getArticleBySlug,
   getFooter,
   getImageUrl,
+  getNavbar,
   getSiteSettings,
 } from "../../lib/api";
-import type { Article, FooterSettings, SiteSettings } from "../../types/api";
+import type {
+  Article,
+  FooterSettings,
+  NavbarColumn,
+  SiteSettings,
+} from "../../types/api";
 
 const formatDate = (value?: string | Date | null) => {
   if (!value) return "Recently";
@@ -67,6 +73,7 @@ export default function ArticleDetailPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -81,12 +88,14 @@ export default function ArticleDetailPage() {
       getArticleBySlug(articleSlug),
       getSiteSettings(),
       getFooter(),
+      getNavbar(),
     ])
-      .then(([articleData, settingsData, footerData]) => {
+      .then(([articleData, settingsData, footerData, navbarData]) => {
         if (!active) return;
         setArticle(articleData);
         setSiteSettings(settingsData);
         setFooter(footerData);
+        setNavbarColumns(navbarData ?? []);
         setError(!articleData);
       })
       .catch(() => {
@@ -108,7 +117,11 @@ export default function ArticleDetailPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-cyan-50">
-      <Navbar siteSettings={siteSettings} isLoading={loading} />
+      <Navbar
+        siteSettings={siteSettings}
+        columns={navbarColumns}
+        isLoading={loading}
+      />
       <main>
         <div className="relative overflow-hidden">
           <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl" />

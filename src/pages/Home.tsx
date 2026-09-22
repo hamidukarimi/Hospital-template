@@ -18,6 +18,7 @@ import {
   getHelpSection,
   getHero,
   getLabTests,
+  getNavbar,
   getServices,
   getSiteSettings,
   getTestimonials,
@@ -31,6 +32,7 @@ import type {
   HeroSection,
   HelpSection as HelpSectionData,
   LabTest,
+  NavbarColumn,
   Service,
   SiteSettings,
   Testimonial,
@@ -51,6 +53,7 @@ function Home() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -69,6 +72,7 @@ function Home() {
         doctorsData,
         articlesData,
         footerData,
+        navbarData,
       ] = await Promise.all([
         getSiteSettings(),
         getHero(),
@@ -81,6 +85,7 @@ function Home() {
         getDoctors(),
         getArticles(),
         getFooter(),
+        getNavbar(),
       ]);
 
       if (!isMounted) {
@@ -98,6 +103,7 @@ function Home() {
       setDoctors(doctorsData ?? []);
       setArticles(articlesData ?? []);
       setFooter(footerData);
+      setNavbarColumns(navbarData ?? []);
       setIsLoading(false);
     };
 
@@ -110,7 +116,11 @@ function Home() {
 
   return (
     <>
-      <Navbar siteSettings={siteSettings} isLoading={isLoading} />
+      <Navbar
+        siteSettings={siteSettings}
+        columns={navbarColumns}
+        isLoading={isLoading}
+      />
       <Hero hero={hero} siteSettings={siteSettings} isLoading={isLoading} />
       <HelpSection helpSection={helpSection} isLoading={isLoading} />
       <AboutSection

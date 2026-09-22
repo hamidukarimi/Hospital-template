@@ -5,23 +5,25 @@ import ContactHero from "../components/contact/ContactHero";
 import ContactInfoCards from "../components/contact/ContactInfoCards";
 import ContactFormSection from "../components/contact/ContactFormSection";
 import ContactMapSection from "../components/contact/ContactMapSection";
-import { getFooter, getSiteSettings } from "../lib/api";
-import type { FooterSettings, SiteSettings } from "../types/api";
+import { getFooter, getNavbar, getSiteSettings } from "../lib/api";
+import type { FooterSettings, NavbarColumn, SiteSettings } from "../types/api";
 
 export default function ContactPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
 
-    Promise.all([getSiteSettings(), getFooter()])
-      .then(([settingsData, footerData]) => {
+    Promise.all([getSiteSettings(), getFooter(), getNavbar()])
+      .then(([settingsData, footerData, navbarData]) => {
         if (!active) return;
         setSettings(settingsData);
         setFooter(footerData);
+        setNavbarColumns(navbarData ?? []);
       })
       .catch((err) => {
         console.error("Failed to load contact page settings:", err);
@@ -50,7 +52,11 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-slate-50/50">
-      <Navbar siteSettings={settings} isLoading={loading} />
+      <Navbar
+        siteSettings={settings}
+        columns={navbarColumns}
+        isLoading={loading}
+      />
       <main>
         <ContactHero />
         <ContactInfoCards

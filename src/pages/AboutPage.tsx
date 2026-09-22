@@ -6,12 +6,18 @@ import AboutMissionVision from "../components/about/AboutMissionVision";
 import AboutStats from "../components/about/AboutStats";
 import AboutMilestones from "../components/about/AboutMilestones";
 import AboutCtaBanner from "../components/about/AboutCtaBanner";
-import { getAbout, getFooter, getSiteSettings } from "../lib/api";
-import type { About, FooterSettings, SiteSettings } from "../types/api";
+import { getAbout, getFooter, getNavbar, getSiteSettings } from "../lib/api";
+import type {
+  About,
+  FooterSettings,
+  NavbarColumn,
+  SiteSettings,
+} from "../types/api";
 
 export default function AboutPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [about, setAbout] = useState<About | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -19,11 +25,12 @@ export default function AboutPage() {
     let active = true;
     setLoading(true);
 
-    Promise.all([getSiteSettings(), getFooter(), getAbout()])
-      .then(([settingsData, footerData, aboutData]) => {
+    Promise.all([getSiteSettings(), getFooter(), getNavbar(), getAbout()])
+      .then(([settingsData, footerData, navbarData, aboutData]) => {
         if (!active) return;
         setSettings(settingsData);
         setFooter(footerData);
+        setNavbarColumns(navbarData ?? []);
         setAbout(aboutData);
       })
       .catch((err) => {
@@ -40,7 +47,11 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-slate-50/50">
-      <Navbar siteSettings={settings} isLoading={loading} />
+      <Navbar
+        siteSettings={settings}
+        columns={navbarColumns}
+        isLoading={loading}
+      />
       <main>
         <AboutHero about={about} isLoading={loading} />
         <AboutMissionVision about={about} />

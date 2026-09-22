@@ -8,6 +8,7 @@ import ServiceOverview from "../components/service-details/ServiceOverview";
 import ServiceDetailsServices from "../components/service-details/ServiceDetailsServices";
 import {
   getFooter,
+  getNavbar,
   getServiceBySlug,
   getServices,
   getSiteSettings,
@@ -15,6 +16,7 @@ import {
 } from "../lib/api";
 import type {
   FooterSettings,
+  NavbarColumn,
   Service,
   SiteSettings,
   Testimonial,
@@ -26,6 +28,7 @@ export default function ServiceDetailsPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [footer, setFooter] = useState<FooterSettings | null>(null);
+  const [navbarColumns, setNavbarColumns] = useState<NavbarColumn[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -39,10 +42,18 @@ export default function ServiceDetailsPage() {
       getServices(),
       getSiteSettings(),
       getFooter(),
+      getNavbar(),
       getTestimonials(),
     ])
       .then(
-        ([details, allServices, settings, footerData, testimonialsData]) => {
+        ([
+          details,
+          allServices,
+          settings,
+          footerData,
+          navbarData,
+          testimonialsData,
+        ]) => {
           if (!active) return;
           setService(
             details ?? (slug === "details" ? (allServices?.[0] ?? null) : null),
@@ -50,6 +61,7 @@ export default function ServiceDetailsPage() {
           setServices(allServices ?? []);
           setSiteSettings(settings);
           setFooter(footerData);
+          setNavbarColumns(navbarData ?? []);
           setTestimonials(testimonialsData ?? []);
           setError(!details && (slug !== "details" || !allServices?.length));
         },
@@ -63,7 +75,11 @@ export default function ServiceDetailsPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar siteSettings={siteSettings} isLoading={loading} />
+      <Navbar
+        siteSettings={siteSettings}
+        columns={navbarColumns}
+        isLoading={loading}
+      />
       <main>
         {loading ? <ServiceDetailsHeroSkeleton /> : null}
 
