@@ -74,7 +74,7 @@ const AboutSection = ({
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
         >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-violet-600">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#147bd5]">
             {smallTitle}
           </p>
 
@@ -105,7 +105,7 @@ const AboutSection = ({
             {isInternalPath(buttonUrl) ? (
               <Link
                 to={buttonUrl}
-                className="inline-flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:scale-[1.03] hover:bg-violet-600"
+                className="inline-flex items-center gap-2 rounded-full bg-[#147bd5] px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:scale-[1.03] hover:bg-[#0a6cc2]"
               >
                 {buttonText}
                 <ArrowRight size={12} strokeWidth={2} />
@@ -113,7 +113,7 @@ const AboutSection = ({
             ) : (
               <a
                 href={buttonUrl}
-                className="inline-flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:scale-[1.03] hover:bg-violet-600"
+                className="inline-flex items-center gap-2 rounded-full bg-[#147bd5] px-6 py-2.5 text-[9px] font-medium text-white transition-colors hover:scale-[1.03] hover:bg-[#0a6cc2]"
               >
                 {buttonText}
                 <ArrowRight size={12} strokeWidth={2} />
@@ -180,14 +180,14 @@ const AboutSection = ({
               </p>
             </div>
 
-            <div className="flex min-h-[52px] min-w-[160px] items-center justify-center rounded-full bg-[#eeedff] px-5 py-2.5">
+            <div className="flex min-h-[52px] min-w-[160px] items-center justify-center rounded-full bg-[#f0f7ff] px-5 py-2.5">
               <div className="text-center">
                 <p className="text-[7px] text-[#071535]">
                   Need an Emergency Help? Call Us!
                 </p>
                 <a
                   href={`tel:${emergencyPhone}`}
-                  className="mt-1 flex items-center justify-center gap-1 text-[9px] font-semibold text-violet-600"
+                  className="mt-1 flex items-center justify-center gap-1 text-[9px] font-semibold text-[#147bd5]"
                 >
                   <Phone size={9} />
                   {emergencyPhone}

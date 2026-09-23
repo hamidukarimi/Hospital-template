@@ -98,7 +98,7 @@ const TestimonialsSection = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="min-h-[215px] rounded-[18px] bg-[#dcd4f7] p-6 shadow-[0_15px_30px_rgba(100,80,150,0.12)] sm:p-7"
+              className="min-h-[215px] rounded-[18px] bg-[#8bc1f0] p-6 shadow-[0_15px_30px_rgba(100,80,150,0.12)] sm:p-7"
             >
               <div className="text-[48px] font-bold leading-[0.7] text-white">
                 “
@@ -237,7 +237,7 @@ const TestimonialsSection = ({
 
                 <a
                   href="#"
-                  className="mt-2 inline-flex items-center gap-1 text-[9px] font-medium text-[#315ba4] transition-colors hover:text-violet-600"
+                  className="mt-2 inline-flex items-center gap-1 text-[9px] font-medium text-[#315ba4] transition-colors hover:text-[#147bd5]"
                 >
                   Learn More
                   <ArrowRight size={10} />

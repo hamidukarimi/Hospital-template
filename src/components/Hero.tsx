@@ -85,7 +85,7 @@ const Hero = ({ hero, siteSettings, isLoading = false }: HeroProps) => {
           {isInternalPath(buttonUrl) ? (
             <Link
               to={buttonUrl}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-500 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-violet-200/50 transition-colors duration-200 hover:scale-[1.04] hover:bg-violet-600"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#147bd5] px-7 py-3 text-sm font-medium text-white shadow-lg shadow-[#147bd5]/50 transition-colors duration-200 hover:scale-[1.04] hover:bg-[#0a6cc2]"
             >
               <span>{buttonText}</span>
               <ArrowRight size={16} strokeWidth={2} />
@@ -93,7 +93,7 @@ const Hero = ({ hero, siteSettings, isLoading = false }: HeroProps) => {
           ) : (
             <a
               href={buttonUrl}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-500 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-violet-200/50 transition-colors duration-200 hover:scale-[1.04] hover:bg-violet-600"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#147bd5] px-7 py-3 text-sm font-medium text-white shadow-lg shadow-[#147bd5]/50 transition-colors duration-200 hover:scale-[1.04] hover:bg-[#0a6cc2]"
             >
               <span>{buttonText}</span>
               <ArrowRight size={16} strokeWidth={2} />

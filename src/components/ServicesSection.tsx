@@ -39,7 +39,7 @@ const ServicesSection = ({
       id="services"
       className="relative overflow-hidden bg-[#f3f6fa] px-5 py-16 sm:px-8 lg:px-10 lg:py-20"
     >
-      <div className="pointer-events-none absolute -left-24 -top-24 h-[260px] w-[260px] rounded-full bg-violet-300/50 blur-[80px]" />
+      <div className="pointer-events-none absolute -left-24 -top-24 h-[260px] w-[260px] rounded-full bg-[#147bd5]/50 blur-[80px]" />
 
       <div className="relative mx-auto max-w-[1450px]">
         <motion.div
@@ -93,7 +93,7 @@ const ServicesSection = ({
                         <Link
                           to={linkUrl}
                           aria-label={`View ${service.title}`}
-                          className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 hover:bg-violet-500 hover:text-white"
+                          className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 hover:bg-[#147bd5] hover:text-white"
                         >
                           <ArrowRight size={18} strokeWidth={1.8} />
                         </Link>
@@ -101,7 +101,7 @@ const ServicesSection = ({
                         <a
                           href={linkUrl}
                           aria-label={`View ${service.title}`}
-                          className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 hover:bg-violet-500 hover:text-white"
+                          className="flex h-[43px] w-[43px] items-center justify-center rounded-full bg-white text-[#071535] shadow-[0_4px_15px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 hover:bg-[#147bd5] hover:text-white"
                         >
                           <ArrowRight size={18} strokeWidth={1.8} />
                         </a>
@@ -147,7 +147,7 @@ const ServicesSection = ({
         >
           <Link
             to="/services/details"
-            className="group inline-flex items-center gap-2 rounded-full bg-[#55b997] px-7 py-2.5 text-[10px] font-medium text-white shadow-[0_6px_15px_rgba(85,185,151,0.2)] transition-colors duration-200 hover:bg-violet-500"
+            className="group inline-flex items-center gap-2 rounded-full bg-[#55b997] px-7 py-2.5 text-[10px] font-medium text-white shadow-[0_6px_15px_rgba(85,185,151,0.2)] transition-colors duration-200 hover:bg-[#46997d]"
           >
             <span>View All Services</span>
             <ArrowRight

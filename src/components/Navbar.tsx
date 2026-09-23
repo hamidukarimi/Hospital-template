@@ -233,8 +233,8 @@ const Navbar = ({
                     }
                     className={`group flex cursor-pointer items-center gap-1 whitespace-nowrap px-2 py-3 text-[13px] font-medium transition-colors duration-200 2xl:px-2.5 2xl:text-[13px] ${
                       isActive
-                        ? "text-violet-600"
-                        : "text-gray-700 hover:text-violet-600"
+                        ? "text-[#147bd5]"
+                        : "text-gray-700 hover:text-[#147bd5]"
                     }`}
                     aria-expanded={isOpen}
                   >
@@ -245,8 +245,8 @@ const Navbar = ({
                       strokeWidth={2}
                       className={`shrink-0 transition-transform duration-200 ${
                         isOpen
-                          ? "rotate-180 text-violet-600"
-                          : "group-hover:text-violet-600"
+                          ? "rotate-180 text-[#147bd5]"
+                          : "group-hover:text-[#147bd5]"
                       }`}
                     />
                   </button>
@@ -255,8 +255,8 @@ const Navbar = ({
                     to={menu.url || "/"}
                     className={`flex items-center gap-1 whitespace-nowrap px-2 py-3 text-[13px] font-medium transition-colors duration-200 2xl:px-2.5 2xl:text-[13px] ${
                       isActive
-                        ? "text-violet-600"
-                        : "text-gray-700 hover:text-violet-600"
+                        ? "text-[#147bd5]"
+                        : "text-gray-700 hover:text-[#147bd5]"
                     }`}
                   >
                     {menu.label}
@@ -272,7 +272,7 @@ const Navbar = ({
                       exit="exit"
                       className="absolute left-0 top-full z-50 min-w-[210px] pt-2"
                     >
-                      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white p-2 shadow-xl shadow-violet-100/60">
+                      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white p-2 shadow-xl shadow-[#147bd5]/60">
                         {menu.dropdownItems.map((item) => (
                           <a
                             key={item.id}
@@ -280,7 +280,7 @@ const Navbar = ({
                             onClick={(event) =>
                               handleLinkNavigation(event, item.url)
                             }
-                            className="block rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                            className="block rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-[#147bd5]/10 hover:text-[#147bd5]"
                           >
                             {item.label}
                           </a>
@@ -297,7 +297,7 @@ const Navbar = ({
         <div className="ml-3 hidden shrink-0 items-center gap-1.5 xl:flex">
           <a
             href={`tel:${emergencyPhone.replace(/[^\d+]/g, "")}`}
-            className="flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-violet-600 px-3 py-2.5 text-xs font-semibold text-violet-600 transition-all duration-200 hover:border-red-500 hover:bg-red-500 hover:text-white 2xl:px-4 2xl:text-sm"
+            className="flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#147bd5] px-3 py-2.5 text-xs font-semibold text-[#147bd5] transition-all duration-200 hover:border-red-500 hover:bg-red-500 hover:text-white 2xl:px-4 2xl:text-sm"
           >
             <Phone size={15} />
             Emergency
@@ -305,7 +305,7 @@ const Navbar = ({
 
           <Link
             to="/contact"
-            className="whitespace-nowrap rounded-lg bg-violet-600 px-4 py-2.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-violet-700 hover:shadow-lg hover:shadow-violet-200 2xl:px-5 2xl:text-sm"
+            className="whitespace-nowrap rounded-lg bg-[#147bd5] px-4 py-2.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#0a6cc2] hover:shadow-lg hover:shadow-[#147bd5]/20 2xl:px-5 2xl:text-sm"
           >
             Contact
           </Link>
@@ -314,7 +314,7 @@ const Navbar = ({
         <button
           type="button"
           onClick={() => setMobileMenuOpen((current) => !current)}
-          className="ml-auto rounded-lg p-2 text-gray-700 transition-colors hover:bg-violet-50 hover:text-violet-600 xl:hidden"
+          className="ml-auto rounded-lg p-2 text-gray-700 transition-colors hover:bg-[#147bd5]/10 hover:text-[#147bd5] xl:hidden"
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
         >
@@ -329,7 +329,7 @@ const Navbar = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="mx-auto mt-2 w-full max-w-[1600px] overflow-hidden rounded-2xl bg-white p-4 shadow-xl shadow-violet-100/50 xl:hidden"
+            className="mx-auto mt-2 w-full max-w-[1600px] overflow-hidden rounded-2xl bg-white p-4 shadow-xl shadow-[#147bd5]/50 xl:hidden"
           >
             <div className="flex flex-col">
               {menuColumns.map((menu) => {
@@ -346,8 +346,8 @@ const Navbar = ({
                           onClick={() => toggleMobileDropdown(menu.id)}
                           className={`flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-medium transition-colors ${
                             isActive
-                              ? "text-violet-600"
-                              : "text-gray-700 hover:bg-violet-50 hover:text-violet-600"
+                              ? "text-[#147bd5]"
+                              : "text-gray-700 hover:bg-[#147bd5]/10 hover:text-[#147bd5]"
                           }`}
                         >
                           <span>{menu.label}</span>
@@ -355,7 +355,7 @@ const Navbar = ({
                           <ChevronDown
                             size={16}
                             className={`transition-transform duration-200 ${
-                              isOpen ? "rotate-180 text-violet-600" : ""
+                              isOpen ? "rotate-180 text-[#147bd5]" : ""
                             }`}
                           />
                         </button>
@@ -369,7 +369,7 @@ const Navbar = ({
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="ml-3 border-l border-violet-100 py-1 pl-3">
+                              <div className="ml-3 border-l border-[#147bd5] py-1 pl-3">
                                 {menu.dropdownItems.map((item) => (
                                   <a
                                     key={item.id}
@@ -377,7 +377,7 @@ const Navbar = ({
                                     onClick={(event) =>
                                       handleLinkNavigation(event, item.url)
                                     }
-                                    className="block rounded-lg px-3 py-2.5 text-sm text-gray-600 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                                    className="block rounded-lg px-3 py-2.5 text-sm text-gray-600 transition-colors hover:bg-[#147bd5]/10 hover:text-[#147bd5]"
                                   >
                                     {item.label}
                                   </a>
@@ -393,8 +393,8 @@ const Navbar = ({
                         onClick={() => setMobileMenuOpen(false)}
                         className={`flex w-full items-center rounded-lg px-3 py-3 text-left text-sm font-medium transition-colors ${
                           isActive
-                            ? "text-violet-600"
-                            : "text-gray-700 hover:bg-violet-50 hover:text-violet-600"
+                            ? "text-[#147bd5]"
+                            : "text-gray-700 hover:bg-[#147bd5]/10 hover:text-[#147bd5]"
                         }`}
                       >
                         {menu.label}
@@ -407,7 +407,7 @@ const Navbar = ({
               <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-4">
                 <a
                   href={`tel:${emergencyPhone.replace(/[^\d+]/g, "")}`}
-                  className="flex items-center justify-center gap-2 rounded-lg border border-violet-600 px-4 py-3 text-sm font-semibold text-violet-600 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
+                  className="flex items-center justify-center gap-2 rounded-lg border border-[#147bd5] px-4 py-3 text-sm font-semibold text-[#147bd5] transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
                 >
                   <Phone size={16} />
                   Emergency
@@ -416,7 +416,7 @@ const Navbar = ({
                 <Link
                   to="/contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg bg-violet-600 px-4 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-violet-700"
+                  className="rounded-lg bg-[#147bd5] px-4 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#0a6cc2]"
                 >
                   Contact
                 </Link>
