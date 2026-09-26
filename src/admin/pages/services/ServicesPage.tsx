@@ -31,21 +31,11 @@ interface ServiceItem {
   color: string;
   isActive?: boolean;
   sortOrder?: number;
-  heroTitle?: string | null;
-  heroDescription?: string | null;
-  heroImage?: string | null;
   ctaText?: string | null;
   ctaUrl?: string | null;
-  overviewSmallTitle?: string | null;
   overviewTitle?: string | null;
   overviewDescription?: string | null;
-  overviewImage?: string | null;
-  overviewSecondaryTitle?: string | null;
-  overviewSecondaryDescription?: string | null;
-  overviewCtaText?: string | null;
-  overviewCtaUrl?: string | null;
   metrics?: unknown[];
-  partners?: unknown[];
 }
 
 const emptyForm = {
@@ -59,21 +49,11 @@ const emptyForm = {
   color: "#147BD5",
   isActive: true,
   sortOrder: 0,
-  heroTitle: "",
-  heroDescription: "",
-  heroImage: "",
   ctaText: "",
   ctaUrl: "",
-  overviewSmallTitle: "",
   overviewTitle: "",
   overviewDescription: "",
-  overviewImage: "",
-  overviewSecondaryTitle: "",
-  overviewSecondaryDescription: "",
-  overviewCtaText: "",
-  overviewCtaUrl: "",
   metricsJson: "[]",
-  partnersJson: "[]",
 };
 
 const ServicesPage = () => {
@@ -143,21 +123,11 @@ const ServicesPage = () => {
           color: item.color ?? "#147BD5",
           isActive: item.isActive ?? true,
           sortOrder: item.sortOrder ?? 0,
-          heroTitle: item.heroTitle ?? "",
-          heroDescription: item.heroDescription ?? "",
-          heroImage: item.heroImage ?? "",
           ctaText: item.ctaText ?? "",
           ctaUrl: item.ctaUrl ?? "",
-          overviewSmallTitle: item.overviewSmallTitle ?? "",
           overviewTitle: item.overviewTitle ?? "",
           overviewDescription: item.overviewDescription ?? "",
-          overviewImage: item.overviewImage ?? "",
-          overviewSecondaryTitle: item.overviewSecondaryTitle ?? "",
-          overviewSecondaryDescription: item.overviewSecondaryDescription ?? "",
-          overviewCtaText: item.overviewCtaText ?? "",
-          overviewCtaUrl: item.overviewCtaUrl ?? "",
           metricsJson: JSON.stringify(item.metrics ?? [], null, 2),
-          partnersJson: JSON.stringify(item.partners ?? [], null, 2),
         });
       } catch {
         setError("Unable to load service for editing.");
@@ -322,19 +292,10 @@ const ServicesPage = () => {
             </div>
             {(
               [
-                "heroTitle",
-                "heroDescription",
-                "heroImage",
                 "ctaText",
                 "ctaUrl",
-                "overviewSmallTitle",
                 "overviewTitle",
                 "overviewDescription",
-                "overviewImage",
-                "overviewSecondaryTitle",
-                "overviewSecondaryDescription",
-                "overviewCtaText",
-                "overviewCtaUrl",
               ] as const
             ).map((field) => (
               <label key={field} className="space-y-2 md:col-span-2">
@@ -363,7 +324,7 @@ const ServicesPage = () => {
             ))}
             <label className="space-y-2 md:col-span-2">
               <span className="text-sm font-medium text-slate-700">
-                Hero and overview metrics JSON
+                Metrics JSON
               </span>
               <textarea
                 rows={5}
@@ -373,20 +334,6 @@ const ServicesPage = () => {
                 }
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
                 placeholder='[{"label":"Departments","value":24,"suffix":"+","sortOrder":1}]'
-              />
-            </label>
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Partners JSON
-              </span>
-              <textarea
-                rows={5}
-                value={form.partnersJson}
-                onChange={(event) =>
-                  setForm({ ...form, partnersJson: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
-                placeholder='[{"name":"Joint Commission International","sortOrder":1}]'
               />
             </label>
 

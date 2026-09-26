@@ -260,7 +260,7 @@ const DoctorsSection = ({
               type="button"
               onClick={previousPage}
               aria-label="Previous doctors"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#9eb9d3] bg-white/60 text-[#147bd5] transition-all hover:bg-white"
+              className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full border border-[#9eb9d3] bg-white/60 text-[#147bd5] transition-all hover:bg-white"
             >
               <ArrowRight size={17} className="rotate-180" />
             </button>
@@ -281,7 +281,7 @@ const DoctorsSection = ({
               type="button"
               onClick={nextPage}
               aria-label="Next doctors"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#9eb9d3] bg-white/60 text-[#147bd5] transition-all hover:bg-white"
+              className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full border border-[#9eb9d3] bg-white/60 text-[#147bd5] transition-all hover:bg-white"
             >
               <ArrowRight size={17} />
             </button>
