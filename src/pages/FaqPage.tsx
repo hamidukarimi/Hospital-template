@@ -151,7 +151,7 @@ export default function FaqPage() {
                             setOpenId(null);
                           }}
                           className={[
-                            "rounded-xl px-4 py-2 text-sm font-semibold transition shadow-sm",
+                            "rounded-xl cursor-pointer px-4 py-2 text-sm font-semibold transition shadow-sm",
                             isActive
                               ? "bg-[#147BD5] text-white shadow-sky-500/25"
                               : "border border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:text-sky-700",
@@ -191,7 +191,7 @@ export default function FaqPage() {
                             onClick={() =>
                               setOpenId(isOpen ? null : faq.id)
                             }
-                            className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition hover:bg-slate-50/80 sm:px-6"
+                            className="flex w-full cursor-pointer items-start justify-between gap-4 px-5 py-5 text-left transition hover:bg-slate-50/80 sm:px-6"
                             aria-expanded={isOpen}
                           >
                             <div className="min-w-0">
