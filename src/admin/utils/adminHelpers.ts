@@ -3,6 +3,7 @@ import {
   Activity,
   BriefcaseMedical,
   Building2,
+  CalendarDays,
   CircleHelp,
   FileText,
   GraduationCap,
@@ -43,7 +44,8 @@ export type AdminIconKey =
   | "profile"
   | "link"
   | "about"
-  | "faq";
+  | "faq"
+  | "appointment";
 
 export const adminIconMap: Record<AdminIconKey, LucideIcon> = {
   service: BriefcaseMedical,
@@ -59,6 +61,7 @@ export const adminIconMap: Record<AdminIconKey, LucideIcon> = {
   link: Link,
   about: Info,
   faq: CircleHelp,
+  appointment: CalendarDays,
 };
 
 export const helperIconMap: Record<string, LucideIcon> = {

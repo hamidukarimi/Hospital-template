@@ -46,7 +46,7 @@ export const Modal = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                className="rounded-lg p-2 cursor-pointer text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
                 aria-label="Close dialog"
               >
                 <X className="h-4 w-4" />

@@ -12,7 +12,7 @@ export default function AboutCtaBanner({ about }: AboutCtaBannerProps) {
   const subtitle =
     about?.ctaSubtitle || "Experience the future of healthcare with AuraTech.";
   const buttonText = about?.ctaButtonText || "Book Appointment";
-  const buttonUrl = about?.ctaButtonUrl || "/contact";
+  const buttonUrl = about?.ctaButtonUrl || "/book-appointment";
 
   return (
     <section className="py-12 bg-slate-50/50">

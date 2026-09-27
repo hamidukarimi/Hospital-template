@@ -24,6 +24,16 @@ const menuGroups = [
     title: "Dashboard",
     items: [
       { to: "/admin", label: "Dashboard", icon: adminIconMap.settings },
+      {
+        to: "/admin/appointments",
+        label: "Appointments",
+        icon: adminIconMap.appointment,
+      },
+      {
+        to: "/admin/doctor-schedules",
+        label: "Doctor Schedules",
+        icon: adminIconMap.doctor,
+      },
       { to: "/admin/services", label: "Services", icon: adminIconMap.service },
       { to: "/admin/doctors", label: "Doctors", icon: adminIconMap.doctor },
       { to: "/admin/articles", label: "Articles", icon: adminIconMap.article },

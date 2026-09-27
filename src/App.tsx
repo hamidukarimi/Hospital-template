@@ -28,6 +28,9 @@ import DoctorProfilePage from "./pages/doctors/DoctorProfilePage";
 import ArticleDetailPage from "./pages/articles/ArticleDetailPage";
 import FaqPage from "./pages/FaqPage";
 import FaqsAdminPage from "./admin/pages/faqs/FaqsPage";
+import BookAppointmentPage from "./pages/BookAppointmentPage";
+import AppointmentsPage from "./admin/pages/appointments/AppointmentsPage";
+import DoctorSchedulesPage from "./admin/pages/appointments/DoctorSchedulesPage";
 
 function App() {
   return (
@@ -35,13 +38,14 @@ function App() {
       <ToastProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<ContactPage />} /> {/* <-- 2. Add Route */}
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/book-appointment" element={<BookAppointmentPage />} />
           <Route
-  path="/doctors/:doctorSlug"
-  element={<DoctorProfilePage />}
-/>
+            path="/doctors/:doctorSlug"
+            element={<DoctorProfilePage />}
+          />
           <Route
             path="/articles/:articleSlug"
             element={<ArticleDetailPage />}
@@ -53,6 +57,14 @@ function App() {
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/profile" element={<AdminProfile />} />
+              <Route
+                path="/admin/appointments"
+                element={<AppointmentsPage />}
+              />
+              <Route
+                path="/admin/doctor-schedules"
+                element={<DoctorSchedulesPage />}
+              />
               <Route path="/admin/services/*" element={<ServicePage />} />
               <Route path="/admin/doctors/*" element={<DoctorPage />} />
               <Route path="/admin/articles/*" element={<ArticlePage />} />

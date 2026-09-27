@@ -283,3 +283,61 @@ export interface NavbarColumn {
   isActive: boolean;
   dropdownItems: NavbarLink[];
 }
+
+export type AppointmentStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "CANCELLED"
+  | "COMPLETED"
+  | "NO_SHOW";
+
+export interface BookableDoctor {
+  id: string;
+  name: string;
+  slug: string;
+  specialty: string;
+  credentials?: string | null;
+  image?: string | null;
+  category?: string | null;
+  description?: string | null;
+}
+
+export interface BookableService {
+  id: string;
+  title: string;
+  slug: string;
+}
+
+export interface AppointmentTimeSlot {
+  startTime: string;
+  endTime: string;
+}
+
+export interface AppointmentBookingResult {
+  id: string;
+  reference: string;
+  appointmentDate: string;
+  startTime: string;
+  endTime: string;
+  status: AppointmentStatus;
+  patientName: string;
+  patientEmail: string;
+  patientPhone: string;
+  reason?: string | null;
+  notes?: string | null;
+  doctor: BookableDoctor;
+  service?: BookableService | null;
+  createdAt?: string;
+}
+
+export interface CreateAppointmentPayload {
+  doctorId: string;
+  serviceId?: string | null;
+  appointmentDate: string;
+  startTime: string;
+  patientName: string;
+  patientEmail: string;
+  patientPhone: string;
+  reason?: string;
+  notes?: string;
+}

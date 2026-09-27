@@ -286,9 +286,9 @@ export default function FaqPage() {
                       icon: CalendarCheck,
                       title: "Plan your visit",
                       description:
-                        "Learn about our services and prepare for a smooth, confident hospital visit.",
-                      action: "Explore services",
-                      to: "/",
+                        "Book an appointment online and choose a time that works for you.",
+                      action: "Book appointment",
+                      to: "/book-appointment",
                       accent: "from-indigo-500 to-sky-600",
                     },
                   ].map((item, index) => (

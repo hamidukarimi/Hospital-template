@@ -10,7 +10,7 @@ interface AdminButtonProps extends HTMLMotionProps<"button"> {
 export const AdminButton = ({
   variant = "primary",
   children,
-  className = "",
+  className = "cursor-pointer",
   ...props
 }: AdminButtonProps) => {
   const variants = {

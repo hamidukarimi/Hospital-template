@@ -1,7 +1,12 @@
 import type {
   About,
   AboutSection,
+  AppointmentBookingResult,
+  AppointmentTimeSlot,
   Article,
+  BookableDoctor,
+  BookableService,
+  CreateAppointmentPayload,
   Doctor,
   Faq,
   FooterSettings,
@@ -163,5 +168,84 @@ export interface ContactSubmissionPayload {
   message: string;
 }
 
+async function postRequestWithError<T, B>(
+  path: string,
+  body: B,
+): Promise<{ data: T | null; message?: string; ok: boolean }> {
+  const url = buildUrl(path);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const payload = (await response.json()) as {
+      success?: boolean;
+      data?: T;
+      message?: string;
+    };
+
+    if (!response.ok || payload.success === false) {
+      return {
+        data: null,
+        message: payload.message || "Request failed.",
+        ok: false,
+      };
+    }
+
+    return { data: (payload.data ?? null) as T | null, ok: true };
+  } catch (error) {
+    console.error(`POST API request failed for ${url}:`, error);
+    return {
+      data: null,
+      message: "Network error. Please try again.",
+      ok: false,
+    };
+  }
+}
+
 export const submitContactMessage = (payload: ContactSubmissionPayload) =>
   postRequest<{ id: string }, ContactSubmissionPayload>("/contact", payload);
+
+export const getBookableDoctors = () =>
+  request<BookableDoctor[]>("/appointments/doctors");
+
+export const getBookableServices = () =>
+  request<BookableService[]>("/appointments/services");
+
+export const getDoctorAvailableDates = (doctorId: string) =>
+  request<{ doctor: BookableDoctor; availableDates: string[] }>(
+    `/appointments/availability/${encodeURIComponent(doctorId)}`,
+  );
+
+export const getDoctorAvailableSlots = (doctorId: string, date: string) =>
+  request<{
+    doctor: BookableDoctor;
+    date: string;
+    slots: AppointmentTimeSlot[];
+  }>(
+    `/appointments/availability/${encodeURIComponent(doctorId)}?date=${encodeURIComponent(date)}`,
+  );
+
+export const bookAppointment = (payload: CreateAppointmentPayload) =>
+  postRequestWithError<AppointmentBookingResult, CreateAppointmentPayload>(
+    "/appointments",
+    payload,
+  );
+
+export const lookupAppointment = (reference: string) =>
+  request<{
+    reference: string;
+    status: string;
+    appointmentDate: string;
+    startTime: string;
+    endTime: string;
+    patientName: string;
+    doctor: BookableDoctor;
+    service?: BookableService | null;
+  }>(`/appointments/${encodeURIComponent(reference)}`);
