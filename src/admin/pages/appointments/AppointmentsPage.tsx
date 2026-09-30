@@ -80,6 +80,9 @@ const AppointmentsPage = () => {
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleDate, setRescheduleDate] = useState("");
   const [rescheduleTime, setRescheduleTime] = useState("");
+  const [rescheduleNote, setRescheduleNote] = useState("");
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelNote, setCancelNote] = useState("");
   const [saving, setSaving] = useState(false);
 
   const queryString = useMemo(() => {
@@ -136,15 +139,26 @@ const AppointmentsPage = () => {
   ) => {
     setSaving(true);
     try {
-      await adminApi.patch(`/admin/appointments/${id}/status`, {
-        status: nextStatus,
-        cancellationReason,
-      });
+      const data = await adminApi.patch<{ notificationQueued?: boolean }>(
+        `/admin/appointments/${id}/status`,
+        {
+          status: nextStatus,
+          cancellationReason,
+        },
+      );
+
+      const queued = Boolean(data?.notificationQueued);
+      const label = nextStatus.replace("_", " ").toLowerCase();
       pushToast({
         type: "success",
-        title: `Appointment marked as ${nextStatus.replace("_", " ").toLowerCase()}.`,
+        title:
+          queued && (nextStatus === "CONFIRMED" || nextStatus === "CANCELLED")
+            ? `Appointment ${label}. Notification queued.`
+            : `Appointment marked as ${label}.`,
       });
       setSelected(null);
+      setCancelOpen(false);
+      setCancelNote("");
       await load();
     } catch (err) {
       pushToast({
@@ -161,12 +175,22 @@ const AppointmentsPage = () => {
     if (!selected || !rescheduleDate || !rescheduleTime) return;
     setSaving(true);
     try {
-      await adminApi.patch(`/admin/appointments/${selected.id}/reschedule`, {
-        appointmentDate: rescheduleDate,
-        startTime: rescheduleTime,
+      const data = await adminApi.patch<{ notificationQueued?: boolean }>(
+        `/admin/appointments/${selected.id}/reschedule`,
+        {
+          appointmentDate: rescheduleDate,
+          startTime: rescheduleTime,
+          patientNote: rescheduleNote.trim() || undefined,
+        },
+      );
+      pushToast({
+        type: "success",
+        title: data?.notificationQueued
+          ? "Appointment rescheduled. Notification queued."
+          : "Appointment rescheduled.",
       });
-      pushToast({ type: "success", title: "Appointment rescheduled." });
       setRescheduleOpen(false);
+      setRescheduleNote("");
       setSelected(null);
       await load();
     } catch (err) {
@@ -490,6 +514,7 @@ const AppointmentsPage = () => {
                     onClick={() => {
                       setRescheduleDate(selected.appointmentDate);
                       setRescheduleTime(selected.startTime);
+                      setRescheduleNote("");
                       setRescheduleOpen(true);
                     }}
                   >
@@ -514,13 +539,10 @@ const AppointmentsPage = () => {
                   <AdminButton
                     variant="danger"
                     disabled={saving}
-                    onClick={() =>
-                      void updateStatus(
-                        selected.id,
-                        "CANCELLED",
-                        "Cancelled by admin",
-                      )
-                    }
+                    onClick={() => {
+                      setCancelNote("");
+                      setCancelOpen(true);
+                    }}
                   >
                     <X className="h-4 w-4" />
                     Cancel
@@ -530,6 +552,54 @@ const AppointmentsPage = () => {
             </div>
           </div>
         ) : null}
+      </Modal>
+
+      <Modal
+        open={cancelOpen}
+        title="Cancel appointment"
+        onClose={() => setCancelOpen(false)}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-slate-600">
+            The patient will receive a cancellation email automatically. Adding
+            a note is optional.
+          </p>
+          <label className="block text-sm">
+            <span className="mb-1 block font-medium text-slate-700">
+              Optional note for the patient
+            </span>
+            <textarea
+              rows={3}
+              value={cancelNote}
+              onChange={(e) => setCancelNote(e.target.value)}
+              placeholder="e.g. Dr. Smith is unavailable on this date."
+              className="w-full rounded-xl border border-slate-200 px-3 py-2.5"
+            />
+          </label>
+          <div className="flex justify-end gap-2">
+            <AdminButton
+              variant="secondary"
+              onClick={() => setCancelOpen(false)}
+            >
+              Close
+            </AdminButton>
+            <AdminButton
+              variant="danger"
+              disabled={saving || !selected}
+              onClick={() =>
+                selected &&
+                void updateStatus(
+                  selected.id,
+                  "CANCELLED",
+                  cancelNote.trim() || "Cancelled by admin",
+                )
+              }
+            >
+              Confirm cancel
+            </AdminButton>
+          </div>
+        </div>
       </Modal>
 
       <Modal
@@ -558,6 +628,18 @@ const AppointmentsPage = () => {
               type="time"
               value={rescheduleTime}
               onChange={(e) => setRescheduleTime(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 px-3 py-2.5"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block font-medium text-slate-700">
+              Optional note for the patient
+            </span>
+            <textarea
+              rows={3}
+              value={rescheduleNote}
+              onChange={(e) => setRescheduleNote(e.target.value)}
+              placeholder="e.g. Your doctor had a scheduling conflict."
               className="w-full rounded-xl border border-slate-200 px-3 py-2.5"
             />
           </label>
