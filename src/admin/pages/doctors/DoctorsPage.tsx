@@ -1,4 +1,11 @@
-import { Image as ImageIcon, PencilLine, Plus, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Image as ImageIcon,
+  PencilLine,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AdminButton } from "../../components/AdminButton";
@@ -16,8 +23,58 @@ import {
   adminFormClass,
   adminFormGridClass,
   adminFormPageWrap,
+  getImageUrl,
 } from "../../utils/adminHelpers";
-import { getImageUrl } from "../../utils/adminHelpers";
+
+interface DoctorSpecialtyItem {
+  label: string;
+  icon?: string;
+  className?: string;
+}
+
+interface DoctorNamedItem {
+  name: string;
+  description?: string;
+}
+
+interface DoctorEducationItem {
+  year: string;
+  title: string;
+  institution: string;
+}
+
+interface DoctorCertificationItem {
+  name: string;
+  issuer?: string;
+  year?: string;
+}
+
+interface DoctorLanguageItem {
+  name: string;
+}
+
+interface DoctorMembershipItem {
+  name: string;
+  role?: string;
+}
+
+interface DoctorAchievementItem {
+  label: string;
+  icon?: string;
+}
+
+interface DoctorPublicationItem {
+  title: string;
+  year?: string;
+  venue?: string;
+  url?: string;
+}
+
+interface DoctorTeachingItem {
+  title: string;
+  institution?: string;
+  year?: string;
+}
 
 interface DoctorItem {
   id: string;
@@ -25,7 +82,9 @@ interface DoctorItem {
   slug?: string | null;
   specialty: string;
   credentials?: string | null;
+  professionalTitle?: string | null;
   description?: string | null;
+  carePhilosophy?: string | null;
   image?: string | null;
   profileUrl?: string | null;
   category?: string | null;
@@ -33,19 +92,69 @@ interface DoctorItem {
   patientsTreated?: string | null;
   rating?: string | null;
   overviewTitle?: string | null;
-  specialties?: unknown[];
-  education?: unknown[];
-  achievements?: unknown[];
+  specialties?: DoctorSpecialtyItem[] | null;
+  clinicalInterests?: DoctorNamedItem[] | null;
+  conditionsTreated?: DoctorNamedItem[] | null;
+  procedures?: DoctorNamedItem[] | null;
+  education?: DoctorEducationItem[] | null;
+  certifications?: DoctorCertificationItem[] | null;
+  languages?: DoctorLanguageItem[] | null;
+  memberships?: DoctorMembershipItem[] | null;
+  affiliations?: DoctorMembershipItem[] | null;
+  achievements?: DoctorAchievementItem[] | null;
+  researchInterests?: DoctorNamedItem[] | null;
+  publications?: DoctorPublicationItem[] | null;
+  teachingExperience?: DoctorTeachingItem[] | null;
+  consultationType?: string | null;
+  consultationLocation?: string | null;
+  acceptingNewPatients?: boolean | null;
   isActive?: boolean;
   sortOrder?: number;
 }
 
-const emptyForm = {
+type DoctorFormState = {
+  name: string;
+  slug: string;
+  specialty: string;
+  credentials: string;
+  professionalTitle: string;
+  description: string;
+  carePhilosophy: string;
+  image: string;
+  profileUrl: string;
+  category: string;
+  yearsExperience: string;
+  patientsTreated: string;
+  rating: string;
+  overviewTitle: string;
+  specialties: DoctorSpecialtyItem[];
+  clinicalInterests: DoctorNamedItem[];
+  conditionsTreated: DoctorNamedItem[];
+  procedures: DoctorNamedItem[];
+  education: DoctorEducationItem[];
+  certifications: DoctorCertificationItem[];
+  languages: DoctorLanguageItem[];
+  memberships: DoctorMembershipItem[];
+  affiliations: DoctorMembershipItem[];
+  achievements: DoctorAchievementItem[];
+  researchInterests: DoctorNamedItem[];
+  publications: DoctorPublicationItem[];
+  teachingExperience: DoctorTeachingItem[];
+  consultationType: string;
+  consultationLocation: string;
+  acceptingNewPatients: boolean;
+  isActive: boolean;
+  sortOrder: number;
+};
+
+const emptyForm: DoctorFormState = {
   name: "",
   slug: "",
   specialty: "",
   credentials: "",
+  professionalTitle: "",
   description: "",
+  carePhilosophy: "",
   image: "",
   profileUrl: "",
   category: "",
@@ -53,12 +162,109 @@ const emptyForm = {
   patientsTreated: "",
   rating: "",
   overviewTitle: "",
-  specialtiesJson: "[]",
-  educationJson: "[]",
-  achievementsJson: "[]",
+  specialties: [],
+  clinicalInterests: [],
+  conditionsTreated: [],
+  procedures: [],
+  education: [],
+  certifications: [],
+  languages: [],
+  memberships: [],
+  affiliations: [],
+  achievements: [],
+  researchInterests: [],
+  publications: [],
+  teachingExperience: [],
+  consultationType: "",
+  consultationLocation: "",
+  acceptingNewPatients: true,
   isActive: true,
   sortOrder: 0,
 };
+
+const inputClass =
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm";
+
+const SectionTitle = ({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) => (
+  <div className="md:col-span-2 border-b border-slate-100 pb-3">
+    <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+    <p className="mt-1 text-sm text-slate-500">{description}</p>
+  </div>
+);
+
+const Field = ({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <label className={`space-y-2 ${className}`}>
+    <span className="text-sm font-medium text-slate-700">{label}</span>
+    {children}
+  </label>
+);
+
+const asArray = <T,>(value: T[] | null | undefined): T[] =>
+  Array.isArray(value) ? value : [];
+
+const moveItem = <T,>(items: T[], index: number, direction: -1 | 1): T[] => {
+  const target = index + direction;
+  if (target < 0 || target >= items.length) return items;
+  const next = [...items];
+  const [item] = next.splice(index, 1);
+  next.splice(target, 0, item);
+  return next;
+};
+
+const RepeatableControls = ({
+  index,
+  total,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+}: {
+  index: number;
+  total: number;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onRemove: () => void;
+}) => (
+  <div className="flex flex-wrap items-center gap-2 md:col-span-2">
+    <AdminButton
+      type="button"
+      variant="ghost"
+      disabled={index === 0}
+      onClick={onMoveUp}
+      aria-label="Move up"
+    >
+      <ChevronUp className="h-4 w-4" />
+      Up
+    </AdminButton>
+    <AdminButton
+      type="button"
+      variant="ghost"
+      disabled={index >= total - 1}
+      onClick={onMoveDown}
+      aria-label="Move down"
+    >
+      <ChevronDown className="h-4 w-4" />
+      Down
+    </AdminButton>
+    <AdminButton type="button" variant="ghost" onClick={onRemove}>
+      <Trash2 className="h-4 w-4" />
+      Remove
+    </AdminButton>
+  </div>
+);
 
 const DoctorsPage = () => {
   const location = useLocation();
@@ -71,12 +277,19 @@ const DoctorsPage = () => {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState<DoctorFormState>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const isFormView =
     location.pathname.endsWith("/new") ||
     /\/doctors\/.+\/edit$/.test(location.pathname);
+
+  const updateField = <K extends keyof DoctorFormState>(
+    key: K,
+    value: DoctorFormState[K],
+  ) => {
+    setForm((current) => ({ ...current, [key]: value }));
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -119,7 +332,9 @@ const DoctorsPage = () => {
           slug: item.slug ?? "",
           specialty: item.specialty ?? "",
           credentials: item.credentials ?? "",
+          professionalTitle: item.professionalTitle ?? "",
           description: item.description ?? "",
+          carePhilosophy: item.carePhilosophy ?? "",
           image: item.image ?? "",
           profileUrl: item.profileUrl ?? "",
           category: item.category ?? "",
@@ -127,9 +342,66 @@ const DoctorsPage = () => {
           patientsTreated: item.patientsTreated ?? "",
           rating: item.rating ?? "",
           overviewTitle: item.overviewTitle ?? "",
-          specialtiesJson: JSON.stringify(item.specialties ?? [], null, 2),
-          educationJson: JSON.stringify(item.education ?? [], null, 2),
-          achievementsJson: JSON.stringify(item.achievements ?? [], null, 2),
+          specialties: asArray(item.specialties).map((entry) => ({
+            label: entry.label ?? "",
+            icon: entry.icon ?? "",
+            className: entry.className ?? "",
+          })),
+          clinicalInterests: asArray(item.clinicalInterests).map((entry) => ({
+            name: entry.name ?? "",
+            description: entry.description ?? "",
+          })),
+          conditionsTreated: asArray(item.conditionsTreated).map((entry) => ({
+            name: entry.name ?? "",
+            description: entry.description ?? "",
+          })),
+          procedures: asArray(item.procedures).map((entry) => ({
+            name: entry.name ?? "",
+            description: entry.description ?? "",
+          })),
+          education: asArray(item.education).map((entry) => ({
+            year: entry.year ?? "",
+            title: entry.title ?? "",
+            institution: entry.institution ?? "",
+          })),
+          certifications: asArray(item.certifications).map((entry) => ({
+            name: entry.name ?? "",
+            issuer: entry.issuer ?? "",
+            year: entry.year ?? "",
+          })),
+          languages: asArray(item.languages).map((entry) => ({
+            name: entry.name ?? "",
+          })),
+          memberships: asArray(item.memberships).map((entry) => ({
+            name: entry.name ?? "",
+            role: entry.role ?? "",
+          })),
+          affiliations: asArray(item.affiliations).map((entry) => ({
+            name: entry.name ?? "",
+            role: entry.role ?? "",
+          })),
+          achievements: asArray(item.achievements).map((entry) => ({
+            label: entry.label ?? "",
+            icon: entry.icon ?? "",
+          })),
+          researchInterests: asArray(item.researchInterests).map((entry) => ({
+            name: entry.name ?? "",
+            description: entry.description ?? "",
+          })),
+          publications: asArray(item.publications).map((entry) => ({
+            title: entry.title ?? "",
+            year: entry.year ?? "",
+            venue: entry.venue ?? "",
+            url: entry.url ?? "",
+          })),
+          teachingExperience: asArray(item.teachingExperience).map((entry) => ({
+            title: entry.title ?? "",
+            institution: entry.institution ?? "",
+            year: entry.year ?? "",
+          })),
+          consultationType: item.consultationType ?? "",
+          consultationLocation: item.consultationLocation ?? "",
+          acceptingNewPatients: item.acceptingNewPatients ?? true,
           isActive: item.isActive ?? true,
           sortOrder: item.sortOrder ?? 0,
         });
@@ -157,30 +429,14 @@ const DoctorsPage = () => {
     setSaving(true);
 
     try {
-      let specialties: unknown[] = [];
-      let education: unknown[] = [];
-      let achievements: unknown[] = [];
-
-      try {
-        specialties = JSON.parse(form.specialtiesJson || "[]");
-        education = JSON.parse(form.educationJson || "[]");
-        achievements = JSON.parse(form.achievementsJson || "[]");
-      } catch {
-        pushToast({
-          type: "error",
-          title: "Invalid JSON",
-          description:
-            "Specialties, education, or achievements JSON is invalid.",
-        });
-        return;
-      }
-
       const payload = {
         name: form.name.trim(),
         slug: form.slug.trim() || undefined,
         specialty: form.specialty.trim(),
         credentials: form.credentials.trim() || null,
+        professionalTitle: form.professionalTitle.trim() || null,
         description: form.description.trim() || null,
+        carePhilosophy: form.carePhilosophy.trim() || null,
         image: form.image.trim() || null,
         profileUrl: form.profileUrl.trim() || null,
         category: form.category.trim() || null,
@@ -188,9 +444,90 @@ const DoctorsPage = () => {
         patientsTreated: form.patientsTreated.trim() || null,
         rating: form.rating.trim() || null,
         overviewTitle: form.overviewTitle.trim() || null,
-        specialties,
-        education,
-        achievements,
+        specialties: form.specialties
+          .map((item) => ({
+            label: item.label.trim(),
+            icon: item.icon?.trim() || null,
+            className: item.className?.trim() || null,
+          }))
+          .filter((item) => item.label),
+        clinicalInterests: form.clinicalInterests
+          .map((item) => ({
+            name: item.name.trim(),
+            description: item.description?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        conditionsTreated: form.conditionsTreated
+          .map((item) => ({
+            name: item.name.trim(),
+            description: item.description?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        procedures: form.procedures
+          .map((item) => ({
+            name: item.name.trim(),
+            description: item.description?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        education: form.education
+          .map((item) => ({
+            year: item.year.trim(),
+            title: item.title.trim(),
+            institution: item.institution.trim(),
+          }))
+          .filter((item) => item.title && item.institution),
+        certifications: form.certifications
+          .map((item) => ({
+            name: item.name.trim(),
+            issuer: item.issuer?.trim() || null,
+            year: item.year?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        languages: form.languages
+          .map((item) => ({ name: item.name.trim() }))
+          .filter((item) => item.name),
+        memberships: form.memberships
+          .map((item) => ({
+            name: item.name.trim(),
+            role: item.role?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        affiliations: form.affiliations
+          .map((item) => ({
+            name: item.name.trim(),
+            role: item.role?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        achievements: form.achievements
+          .map((item) => ({
+            label: item.label.trim(),
+            icon: item.icon?.trim() || null,
+          }))
+          .filter((item) => item.label),
+        researchInterests: form.researchInterests
+          .map((item) => ({
+            name: item.name.trim(),
+            description: item.description?.trim() || null,
+          }))
+          .filter((item) => item.name),
+        publications: form.publications
+          .map((item) => ({
+            title: item.title.trim(),
+            year: item.year?.trim() || null,
+            venue: item.venue?.trim() || null,
+            url: item.url?.trim() || null,
+          }))
+          .filter((item) => item.title),
+        teachingExperience: form.teachingExperience
+          .map((item) => ({
+            title: item.title.trim(),
+            institution: item.institution?.trim() || null,
+            year: item.year?.trim() || null,
+          }))
+          .filter((item) => item.title),
+        consultationType: form.consultationType.trim() || null,
+        consultationLocation: form.consultationLocation.trim() || null,
+        acceptingNewPatients: form.acceptingNewPatients,
         isActive: form.isActive,
         sortOrder: Number(form.sortOrder) || 0,
       };
@@ -252,7 +589,7 @@ const DoctorsPage = () => {
 
   if (isFormView) {
     return (
-      <div className={adminFormPageWrap.md}>
+      <div className={adminFormPageWrap.lg}>
         <PageHeader
           title={editingId ? "Edit doctor" : "Create doctor"}
           backLink="/admin/doctors"
@@ -263,235 +600,983 @@ const DoctorsPage = () => {
           }
         />
 
-        <form onSubmit={handleSubmit} className={adminFormClass}>
+        <form onSubmit={handleSubmit} className={`${adminFormClass} space-y-8`}>
           <div className={adminFormGridClass}>
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">Name</span>
+            <SectionTitle
+              title="Basic information"
+              description="Core identity fields used across the directory and profile page."
+            />
+            <Field label="Name">
               <input
                 value={form.name}
-                onChange={(event) =>
-                  setForm({ ...form, name: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                onChange={(event) => updateField("name", event.target.value)}
+                className={inputClass}
                 required
               />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">Slug</span>
+            </Field>
+            <Field label="Slug">
               <input
                 value={form.slug}
-                onChange={(event) =>
-                  setForm({ ...form, slug: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="ahmad-kha"
+                onChange={(event) => updateField("slug", event.target.value)}
+                className={inputClass}
+                placeholder="ahmad-rahimi"
               />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">
-                Specialty
-              </span>
+            </Field>
+            <Field label="Specialty">
               <input
                 value={form.specialty}
                 onChange={(event) =>
-                  setForm({ ...form, specialty: event.target.value })
+                  updateField("specialty", event.target.value)
                 }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                className={inputClass}
                 required
               />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">
-                Credentials
-              </span>
+            </Field>
+            <Field label="Credentials">
               <input
                 value={form.credentials}
                 onChange={(event) =>
-                  setForm({ ...form, credentials: event.target.value })
+                  updateField("credentials", event.target.value)
                 }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                className={inputClass}
                 placeholder="MD, FACP"
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Overview title
-              </span>
+            </Field>
+            <Field label="Professional title" className="md:col-span-2">
               <input
-                value={form.overviewTitle}
+                value={form.professionalTitle}
                 onChange={(event) =>
-                  setForm({ ...form, overviewTitle: event.target.value })
+                  updateField("professionalTitle", event.target.value)
                 }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="About Dr. Ahmad Kha"
+                className={inputClass}
+                placeholder="Consultant Cardiologist"
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Description / Overview
-              </span>
-              <textarea
-                value={form.description}
-                onChange={(event) =>
-                  setForm({ ...form, description: event.target.value })
-                }
-                rows={4}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-              />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">
-                Years experience
-              </span>
-              <input
-                value={form.yearsExperience}
-                onChange={(event) =>
-                  setForm({ ...form, yearsExperience: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="15+"
-              />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">
-                Patients treated
-              </span>
-              <input
-                value={form.patientsTreated}
-                onChange={(event) =>
-                  setForm({ ...form, patientsTreated: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="10K+"
-              />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">Rating</span>
-              <input
-                value={form.rating}
-                onChange={(event) =>
-                  setForm({ ...form, rating: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="4.9/5"
-              />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">
-                Category
-              </span>
+            </Field>
+            <Field label="Category">
               <input
                 value={form.category}
                 onChange={(event) =>
-                  setForm({ ...form, category: event.target.value })
+                  updateField("category", event.target.value)
                 }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                className={inputClass}
               />
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-700">
-                Sort order
-              </span>
+            </Field>
+            <Field label="Sort order">
               <input
                 type="number"
                 value={form.sortOrder}
                 onChange={(event) =>
-                  setForm({ ...form, sortOrder: Number(event.target.value) })
+                  updateField("sortOrder", Number(event.target.value))
                 }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                className={inputClass}
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Image URL
-              </span>
+            </Field>
+            <Field label="Image URL" className="md:col-span-2">
               <input
                 value={form.image}
-                onChange={(event) =>
-                  setForm({ ...form, image: event.target.value })
-                }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                onChange={(event) => updateField("image", event.target.value)}
+                className={inputClass}
                 placeholder="/uploads/doctors/doctor.jpg"
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Profile URL
-              </span>
+            </Field>
+            <Field label="Profile URL" className="md:col-span-2">
               <input
                 value={form.profileUrl}
                 onChange={(event) =>
-                  setForm({ ...form, profileUrl: event.target.value })
+                  updateField("profileUrl", event.target.value)
                 }
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
-                placeholder="/doctors/ahmad-kha"
+                className={inputClass}
+                placeholder="/doctors/ahmad-rahimi"
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Specialties JSON
-              </span>
-              <textarea
-                value={form.specialtiesJson}
+            </Field>
+            <Field label="Years experience">
+              <input
+                value={form.yearsExperience}
                 onChange={(event) =>
-                  setForm({ ...form, specialtiesJson: event.target.value })
+                  updateField("yearsExperience", event.target.value)
                 }
-                rows={6}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
-                placeholder='[{ "label": "Cardiology", "icon": "Heart", "className": "bg-pink-50 text-pink-700 border-pink-200" }]'
+                className={inputClass}
+                placeholder="15+"
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Education JSON
-              </span>
-              <textarea
-                value={form.educationJson}
+            </Field>
+            <Field label="Patients treated">
+              <input
+                value={form.patientsTreated}
                 onChange={(event) =>
-                  setForm({ ...form, educationJson: event.target.value })
+                  updateField("patientsTreated", event.target.value)
                 }
-                rows={6}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
-                placeholder='[{ "year": "2020", "title": "MD", "institution": "Johns Hopkins University" }]'
+                className={inputClass}
+                placeholder="10K+"
               />
-            </label>
-
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">
-                Achievements JSON
-              </span>
-              <textarea
-                value={form.achievementsJson}
-                onChange={(event) =>
-                  setForm({ ...form, achievementsJson: event.target.value })
-                }
-                rows={5}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-xs"
-                placeholder='[{ "label": "Top Doctor Award (2023)", "icon": "Award" }]'
+            </Field>
+            <Field label="Rating">
+              <input
+                value={form.rating}
+                onChange={(event) => updateField("rating", event.target.value)}
+                className={inputClass}
+                placeholder="4.9/5"
               />
-            </label>
-
+            </Field>
             <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
               <span>Active</span>
               <input
                 type="checkbox"
                 checked={form.isActive}
                 onChange={(event) =>
-                  setForm({ ...form, isActive: event.target.checked })
+                  updateField("isActive", event.target.checked)
+                }
+                className="h-4 w-4 rounded border-slate-300"
+              />
+            </label>
+          </div>
+
+          <div className={adminFormGridClass}>
+            <SectionTitle
+              title="Biography"
+              description="Patient-facing overview content. Description is the main biography."
+            />
+            <Field label="Overview title" className="md:col-span-2">
+              <input
+                value={form.overviewTitle}
+                onChange={(event) =>
+                  updateField("overviewTitle", event.target.value)
+                }
+                className={inputClass}
+                placeholder="About Dr. Ahmad Rahimi"
+              />
+            </Field>
+            <Field label="Biography / description" className="md:col-span-2">
+              <textarea
+                value={form.description}
+                onChange={(event) =>
+                  updateField("description", event.target.value)
+                }
+                rows={5}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Care philosophy" className="md:col-span-2">
+              <textarea
+                value={form.carePhilosophy}
+                onChange={(event) =>
+                  updateField("carePhilosophy", event.target.value)
+                }
+                rows={3}
+                className={inputClass}
+                placeholder="How this doctor approaches patient care"
+              />
+            </Field>
+          </div>
+
+          <div className="space-y-4">
+            <div className={adminFormGridClass}>
+              <SectionTitle
+                title="Clinical expertise"
+                description="Specialties, interests, conditions, and procedures shown on the public profile."
+              />
+            </div>
+
+            {form.specialties.map((item, index) => (
+              <div
+                key={`specialty-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Specialty label">
+                  <input
+                    value={item.label}
+                    onChange={(event) => {
+                      const next = [...form.specialties];
+                      next[index] = { ...next[index], label: event.target.value };
+                      updateField("specialties", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Icon key">
+                  <input
+                    value={item.icon ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.specialties];
+                      next[index] = { ...next[index], icon: event.target.value };
+                      updateField("specialties", next);
+                    }}
+                    className={inputClass}
+                    placeholder="Heart"
+                  />
+                </Field>
+                <Field label="CSS class names" className="md:col-span-2">
+                  <input
+                    value={item.className ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.specialties];
+                      next[index] = {
+                        ...next[index],
+                        className: event.target.value,
+                      };
+                      updateField("specialties", next);
+                    }}
+                    className={inputClass}
+                    placeholder="bg-pink-50 text-pink-700 border-pink-200"
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.specialties.length}
+                  onMoveUp={() =>
+                    updateField(
+                      "specialties",
+                      moveItem(form.specialties, index, -1),
+                    )
+                  }
+                  onMoveDown={() =>
+                    updateField(
+                      "specialties",
+                      moveItem(form.specialties, index, 1),
+                    )
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "specialties",
+                      form.specialties.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("specialties", [
+                  ...form.specialties,
+                  { label: "", icon: "", className: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add specialty
+            </AdminButton>
+
+            {(["clinicalInterests", "conditionsTreated", "procedures"] as const).map(
+              (fieldKey) => {
+                const labels = {
+                  clinicalInterests: "Clinical interest",
+                  conditionsTreated: "Condition treated",
+                  procedures: "Procedure / treatment",
+                } as const;
+                const list = form[fieldKey];
+                return (
+                  <div key={fieldKey} className="space-y-3 pt-2">
+                    <h4 className="text-sm font-semibold text-slate-800">
+                      {labels[fieldKey]}s
+                    </h4>
+                    {list.map((item, index) => (
+                      <div
+                        key={`${fieldKey}-${index}`}
+                        className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+                      >
+                        <Field label="Name">
+                          <input
+                            value={item.name}
+                            onChange={(event) => {
+                              const next = [...list];
+                              next[index] = {
+                                ...next[index],
+                                name: event.target.value,
+                              };
+                              updateField(fieldKey, next);
+                            }}
+                            className={inputClass}
+                          />
+                        </Field>
+                        <Field label="Short description">
+                          <input
+                            value={item.description ?? ""}
+                            onChange={(event) => {
+                              const next = [...list];
+                              next[index] = {
+                                ...next[index],
+                                description: event.target.value,
+                              };
+                              updateField(fieldKey, next);
+                            }}
+                            className={inputClass}
+                          />
+                        </Field>
+                        <RepeatableControls
+                          index={index}
+                          total={list.length}
+                          onMoveUp={() =>
+                            updateField(fieldKey, moveItem(list, index, -1))
+                          }
+                          onMoveDown={() =>
+                            updateField(fieldKey, moveItem(list, index, 1))
+                          }
+                          onRemove={() =>
+                            updateField(
+                              fieldKey,
+                              list.filter((_, i) => i !== index),
+                            )
+                          }
+                        />
+                      </div>
+                    ))}
+                    <AdminButton
+                      type="button"
+                      variant="secondary"
+                      onClick={() =>
+                        updateField(fieldKey, [
+                          ...list,
+                          { name: "", description: "" },
+                        ])
+                      }
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add {labels[fieldKey].toLowerCase()}
+                    </AdminButton>
+                  </div>
+                );
+              },
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <div className={adminFormGridClass}>
+              <SectionTitle
+                title="Education and certifications"
+                description="Training timeline and professional certifications or licenses."
+              />
+            </div>
+            {form.education.map((item, index) => (
+              <div
+                key={`education-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Year">
+                  <input
+                    value={item.year}
+                    onChange={(event) => {
+                      const next = [...form.education];
+                      next[index] = { ...next[index], year: event.target.value };
+                      updateField("education", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Title">
+                  <input
+                    value={item.title}
+                    onChange={(event) => {
+                      const next = [...form.education];
+                      next[index] = { ...next[index], title: event.target.value };
+                      updateField("education", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Institution" className="md:col-span-2">
+                  <input
+                    value={item.institution}
+                    onChange={(event) => {
+                      const next = [...form.education];
+                      next[index] = {
+                        ...next[index],
+                        institution: event.target.value,
+                      };
+                      updateField("education", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.education.length}
+                  onMoveUp={() =>
+                    updateField("education", moveItem(form.education, index, -1))
+                  }
+                  onMoveDown={() =>
+                    updateField("education", moveItem(form.education, index, 1))
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "education",
+                      form.education.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("education", [
+                  ...form.education,
+                  { year: "", title: "", institution: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add education entry
+            </AdminButton>
+
+            {form.certifications.map((item, index) => (
+              <div
+                key={`certification-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Certification / license">
+                  <input
+                    value={item.name}
+                    onChange={(event) => {
+                      const next = [...form.certifications];
+                      next[index] = { ...next[index], name: event.target.value };
+                      updateField("certifications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Issuer">
+                  <input
+                    value={item.issuer ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.certifications];
+                      next[index] = {
+                        ...next[index],
+                        issuer: event.target.value,
+                      };
+                      updateField("certifications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Year">
+                  <input
+                    value={item.year ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.certifications];
+                      next[index] = { ...next[index], year: event.target.value };
+                      updateField("certifications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.certifications.length}
+                  onMoveUp={() =>
+                    updateField(
+                      "certifications",
+                      moveItem(form.certifications, index, -1),
+                    )
+                  }
+                  onMoveDown={() =>
+                    updateField(
+                      "certifications",
+                      moveItem(form.certifications, index, 1),
+                    )
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "certifications",
+                      form.certifications.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("certifications", [
+                  ...form.certifications,
+                  { name: "", issuer: "", year: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add certification
+            </AdminButton>
+          </div>
+
+          <div className="space-y-4">
+            <div className={adminFormGridClass}>
+              <SectionTitle
+                title="Languages"
+                description="Languages the doctor can use with patients."
+              />
+            </div>
+            {form.languages.map((item, index) => (
+              <div
+                key={`language-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Language">
+                  <input
+                    value={item.name}
+                    onChange={(event) => {
+                      const next = [...form.languages];
+                      next[index] = { name: event.target.value };
+                      updateField("languages", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.languages.length}
+                  onMoveUp={() =>
+                    updateField("languages", moveItem(form.languages, index, -1))
+                  }
+                  onMoveDown={() =>
+                    updateField("languages", moveItem(form.languages, index, 1))
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "languages",
+                      form.languages.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("languages", [...form.languages, { name: "" }])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add language
+            </AdminButton>
+          </div>
+
+          <div className="space-y-4">
+            <div className={adminFormGridClass}>
+              <SectionTitle
+                title="Awards and memberships"
+                description="Recognition, professional memberships, and affiliations."
+              />
+            </div>
+            {form.achievements.map((item, index) => (
+              <div
+                key={`achievement-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Award / recognition">
+                  <input
+                    value={item.label}
+                    onChange={(event) => {
+                      const next = [...form.achievements];
+                      next[index] = { ...next[index], label: event.target.value };
+                      updateField("achievements", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Icon key">
+                  <input
+                    value={item.icon ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.achievements];
+                      next[index] = { ...next[index], icon: event.target.value };
+                      updateField("achievements", next);
+                    }}
+                    className={inputClass}
+                    placeholder="Award"
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.achievements.length}
+                  onMoveUp={() =>
+                    updateField(
+                      "achievements",
+                      moveItem(form.achievements, index, -1),
+                    )
+                  }
+                  onMoveDown={() =>
+                    updateField(
+                      "achievements",
+                      moveItem(form.achievements, index, 1),
+                    )
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "achievements",
+                      form.achievements.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("achievements", [
+                  ...form.achievements,
+                  { label: "", icon: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add award / recognition
+            </AdminButton>
+
+            {(["memberships", "affiliations"] as const).map((fieldKey) => {
+              const list = form[fieldKey];
+              const singular =
+                fieldKey === "memberships" ? "membership" : "affiliation";
+              return (
+                <div key={fieldKey} className="space-y-3 pt-2">
+                  <h4 className="text-sm font-semibold text-slate-800">
+                    {fieldKey === "memberships"
+                      ? "Professional memberships"
+                      : "Hospital / institutional affiliations"}
+                  </h4>
+                  {list.map((item, index) => (
+                    <div
+                      key={`${fieldKey}-${index}`}
+                      className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+                    >
+                      <Field label="Name">
+                        <input
+                          value={item.name}
+                          onChange={(event) => {
+                            const next = [...list];
+                            next[index] = {
+                              ...next[index],
+                              name: event.target.value,
+                            };
+                            updateField(fieldKey, next);
+                          }}
+                          className={inputClass}
+                        />
+                      </Field>
+                      <Field label="Role">
+                        <input
+                          value={item.role ?? ""}
+                          onChange={(event) => {
+                            const next = [...list];
+                            next[index] = {
+                              ...next[index],
+                              role: event.target.value,
+                            };
+                            updateField(fieldKey, next);
+                          }}
+                          className={inputClass}
+                        />
+                      </Field>
+                      <RepeatableControls
+                        index={index}
+                        total={list.length}
+                        onMoveUp={() =>
+                          updateField(fieldKey, moveItem(list, index, -1))
+                        }
+                        onMoveDown={() =>
+                          updateField(fieldKey, moveItem(list, index, 1))
+                        }
+                        onRemove={() =>
+                          updateField(
+                            fieldKey,
+                            list.filter((_, i) => i !== index),
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
+                  <AdminButton
+                    type="button"
+                    variant="secondary"
+                    onClick={() =>
+                      updateField(fieldKey, [...list, { name: "", role: "" }])
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add {singular}
+                  </AdminButton>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="space-y-4">
+            <div className={adminFormGridClass}>
+              <SectionTitle
+                title="Research and publications"
+                description="Optional academic details for doctors who publish or teach."
+              />
+            </div>
+            {form.researchInterests.map((item, index) => (
+              <div
+                key={`research-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Research interest">
+                  <input
+                    value={item.name}
+                    onChange={(event) => {
+                      const next = [...form.researchInterests];
+                      next[index] = { ...next[index], name: event.target.value };
+                      updateField("researchInterests", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Short description">
+                  <input
+                    value={item.description ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.researchInterests];
+                      next[index] = {
+                        ...next[index],
+                        description: event.target.value,
+                      };
+                      updateField("researchInterests", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.researchInterests.length}
+                  onMoveUp={() =>
+                    updateField(
+                      "researchInterests",
+                      moveItem(form.researchInterests, index, -1),
+                    )
+                  }
+                  onMoveDown={() =>
+                    updateField(
+                      "researchInterests",
+                      moveItem(form.researchInterests, index, 1),
+                    )
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "researchInterests",
+                      form.researchInterests.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("researchInterests", [
+                  ...form.researchInterests,
+                  { name: "", description: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add research interest
+            </AdminButton>
+
+            {form.publications.map((item, index) => (
+              <div
+                key={`publication-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Title" className="md:col-span-2">
+                  <input
+                    value={item.title}
+                    onChange={(event) => {
+                      const next = [...form.publications];
+                      next[index] = { ...next[index], title: event.target.value };
+                      updateField("publications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Year">
+                  <input
+                    value={item.year ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.publications];
+                      next[index] = { ...next[index], year: event.target.value };
+                      updateField("publications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Venue">
+                  <input
+                    value={item.venue ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.publications];
+                      next[index] = { ...next[index], venue: event.target.value };
+                      updateField("publications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="URL" className="md:col-span-2">
+                  <input
+                    value={item.url ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.publications];
+                      next[index] = { ...next[index], url: event.target.value };
+                      updateField("publications", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.publications.length}
+                  onMoveUp={() =>
+                    updateField(
+                      "publications",
+                      moveItem(form.publications, index, -1),
+                    )
+                  }
+                  onMoveDown={() =>
+                    updateField(
+                      "publications",
+                      moveItem(form.publications, index, 1),
+                    )
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "publications",
+                      form.publications.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("publications", [
+                  ...form.publications,
+                  { title: "", year: "", venue: "", url: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add publication
+            </AdminButton>
+
+            {form.teachingExperience.map((item, index) => (
+              <div
+                key={`teaching-${index}`}
+                className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 md:grid-cols-2"
+              >
+                <Field label="Title">
+                  <input
+                    value={item.title}
+                    onChange={(event) => {
+                      const next = [...form.teachingExperience];
+                      next[index] = { ...next[index], title: event.target.value };
+                      updateField("teachingExperience", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Year">
+                  <input
+                    value={item.year ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.teachingExperience];
+                      next[index] = { ...next[index], year: event.target.value };
+                      updateField("teachingExperience", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Institution" className="md:col-span-2">
+                  <input
+                    value={item.institution ?? ""}
+                    onChange={(event) => {
+                      const next = [...form.teachingExperience];
+                      next[index] = {
+                        ...next[index],
+                        institution: event.target.value,
+                      };
+                      updateField("teachingExperience", next);
+                    }}
+                    className={inputClass}
+                  />
+                </Field>
+                <RepeatableControls
+                  index={index}
+                  total={form.teachingExperience.length}
+                  onMoveUp={() =>
+                    updateField(
+                      "teachingExperience",
+                      moveItem(form.teachingExperience, index, -1),
+                    )
+                  }
+                  onMoveDown={() =>
+                    updateField(
+                      "teachingExperience",
+                      moveItem(form.teachingExperience, index, 1),
+                    )
+                  }
+                  onRemove={() =>
+                    updateField(
+                      "teachingExperience",
+                      form.teachingExperience.filter((_, i) => i !== index),
+                    )
+                  }
+                />
+              </div>
+            ))}
+            <AdminButton
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                updateField("teachingExperience", [
+                  ...form.teachingExperience,
+                  { title: "", institution: "", year: "" },
+                ])
+              }
+            >
+              <Plus className="h-4 w-4" />
+              Add teaching experience
+            </AdminButton>
+          </div>
+
+          <div className={adminFormGridClass}>
+            <SectionTitle
+              title="Practice information"
+              description="Optional patient-facing practice details. Do not store private contact information here."
+            />
+            <Field label="Consultation type">
+              <input
+                value={form.consultationType}
+                onChange={(event) =>
+                  updateField("consultationType", event.target.value)
+                }
+                className={inputClass}
+                placeholder="In-person, Telehealth"
+              />
+            </Field>
+            <Field label="Consultation location / department">
+              <input
+                value={form.consultationLocation}
+                onChange={(event) =>
+                  updateField("consultationLocation", event.target.value)
+                }
+                className={inputClass}
+                placeholder="Cardiology Department"
+              />
+            </Field>
+            <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 md:col-span-2">
+              <span>Accepting new patients</span>
+              <input
+                type="checkbox"
+                checked={form.acceptingNewPatients}
+                onChange={(event) =>
+                  updateField("acceptingNewPatients", event.target.checked)
                 }
                 className="h-4 w-4 rounded border-slate-300"
               />

@@ -1,4 +1,5 @@
 import { CalendarDays } from "lucide-react";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../../lib/api";
 import type { Doctor } from "../../types/api";
 
@@ -8,13 +9,11 @@ interface DoctorProfileCardProps {
 
 export default function DoctorProfileCard({ doctor }: DoctorProfileCardProps) {
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-[0_12px_35px_rgba(0,0,0,0.10)]">
-      {/* Gradient Header */}
+    <div className="overflow-hidden rounded-2xl bg-white shadow-[0_12px_35px_rgba(0,0,0,0.10)] lg:sticky lg:top-24">
       <div className="relative h-36 overflow-hidden bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400">
         <div className="absolute -bottom-14 left-1/2 h-32 w-[120%] -translate-x-1/2 rounded-[50%] bg-white" />
       </div>
 
-      {/* Doctor Image */}
       <div className="relative -mt-24 flex justify-center">
         <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-white shadow-lg">
           <img
@@ -25,27 +24,35 @@ export default function DoctorProfileCard({ doctor }: DoctorProfileCardProps) {
         </div>
       </div>
 
-      {/* Doctor Information */}
       <div className="px-6 pb-7 pt-3 text-center">
-        <h2 className="text-2xl font-semibold text-gray-900">
-          {doctor.name}
-        </h2>
+        <h2 className="text-2xl font-semibold text-gray-900">{doctor.name}</h2>
 
         {doctor.credentials ? (
-          <p className="mt-1 text-sm text-gray-500">
-            {doctor.credentials}
+          <p className="mt-1 text-sm text-gray-500">{doctor.credentials}</p>
+        ) : null}
+
+        {doctor.professionalTitle ? (
+          <p className="mt-1 text-sm font-medium text-sky-700">
+            {doctor.professionalTitle}
           </p>
         ) : null}
 
-        <button
-          type="button"
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-600"
+        <p className="mt-2 text-sm text-gray-600">{doctor.specialty}</p>
+
+        {doctor.acceptingNewPatients === false ? (
+          <p className="mt-3 text-xs font-medium text-amber-700">
+            Not currently accepting new patients
+          </p>
+        ) : null}
+
+        <Link
+          to={`/book-appointment?doctor=${encodeURIComponent(doctor.slug)}`}
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
         >
           <CalendarDays size={17} />
           Schedule Appointment
-        </button>
+        </Link>
 
-        {/* Statistics */}
         <div className="mt-7 grid grid-cols-3 divide-x divide-gray-200">
           <div className="px-2">
             <p className="text-2xl font-semibold text-gray-900">
@@ -73,9 +80,7 @@ export default function DoctorProfileCard({ doctor }: DoctorProfileCardProps) {
             <p className="text-2xl font-semibold text-gray-900">
               {doctor.rating || "—"}
             </p>
-            <p className="mt-1 text-xs text-gray-500">
-              Rating
-            </p>
+            <p className="mt-1 text-xs text-gray-500">Rating</p>
           </div>
         </div>
       </div>

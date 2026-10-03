@@ -4,8 +4,11 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DoctorExpertiseCard from "../../components/doctor-profile/DoctorExpertiseCard";
 import DoctorExperienceCard from "../../components/doctor-profile/DoctorExperienceCard";
+import DoctorLanguagesCard from "../../components/doctor-profile/DoctorLanguagesCard";
 import DoctorOverviewCard from "../../components/doctor-profile/DoctorOverviewCard";
+import DoctorPracticeCard from "../../components/doctor-profile/DoctorPracticeCard";
 import DoctorProfileCard from "../../components/doctor-profile/DoctorProfileCard";
+import DoctorResearchCard from "../../components/doctor-profile/DoctorResearchCard";
 import {
   getDoctorBySlug,
   getFooter,
@@ -99,6 +102,9 @@ export default function DoctorProfilePage() {
                 <DoctorOverviewCard doctor={doctor} />
                 <DoctorExpertiseCard doctor={doctor} />
                 <DoctorExperienceCard doctor={doctor} />
+                <DoctorLanguagesCard doctor={doctor} />
+                <DoctorResearchCard doctor={doctor} />
+                <DoctorPracticeCard doctor={doctor} />
               </div>
             </div>
           ) : null}

@@ -199,13 +199,48 @@ export interface DoctorAchievementItem {
   icon?: string | null;
 }
 
+export interface DoctorNamedItem {
+  name: string;
+  description?: string | null;
+}
+
+export interface DoctorCertificationItem {
+  name: string;
+  issuer?: string | null;
+  year?: string | null;
+}
+
+export interface DoctorLanguageItem {
+  name: string;
+}
+
+export interface DoctorMembershipItem {
+  name: string;
+  role?: string | null;
+}
+
+export interface DoctorPublicationItem {
+  title: string;
+  year?: string | null;
+  venue?: string | null;
+  url?: string | null;
+}
+
+export interface DoctorTeachingItem {
+  title: string;
+  institution?: string | null;
+  year?: string | null;
+}
+
 export interface Doctor {
   id: string;
   name: string;
   slug: string;
   specialty: string;
   credentials?: string | null;
+  professionalTitle?: string | null;
   description?: string | null;
+  carePhilosophy?: string | null;
   image?: string | null;
   profileUrl?: string | null;
   category?: string | null;
@@ -214,8 +249,21 @@ export interface Doctor {
   rating?: string | null;
   overviewTitle?: string | null;
   specialties?: DoctorSpecialtyItem[] | null;
+  clinicalInterests?: DoctorNamedItem[] | null;
+  conditionsTreated?: DoctorNamedItem[] | null;
+  procedures?: DoctorNamedItem[] | null;
   education?: DoctorEducationItem[] | null;
+  certifications?: DoctorCertificationItem[] | null;
+  languages?: DoctorLanguageItem[] | null;
+  memberships?: DoctorMembershipItem[] | null;
+  affiliations?: DoctorMembershipItem[] | null;
   achievements?: DoctorAchievementItem[] | null;
+  researchInterests?: DoctorNamedItem[] | null;
+  publications?: DoctorPublicationItem[] | null;
+  teachingExperience?: DoctorTeachingItem[] | null;
+  consultationType?: string | null;
+  consultationLocation?: string | null;
+  acceptingNewPatients?: boolean | null;
   isActive: boolean;
   sortOrder: number;
 }
